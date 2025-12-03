@@ -3,13 +3,11 @@
 import React from "react";
 
 const Logo: React.FC = () => {
-  // Placeholder for the finalized logo graphic and typography.
-  // Replace this SVG with your actual HTR logo file (e.g., an Image component).
   return (
     <div className="flex items-center space-x-2 cursor-pointer">
-      {/* Placeholder Graphic: Use your final HTR image here */}
+      {/* Graphic uses Primary Brand Color */}
       <svg
-        className="w-8 h-8 text-blue-700"
+        className="w-8 h-8 text-primary"
         fill="none"
         stroke="currentColor"
         viewBox="0 0 24 24"
@@ -23,12 +21,12 @@ const Logo: React.FC = () => {
         />
       </svg>
       <div className="flex flex-col leading-none">
-        {/* Main Acronym - Replace with your designed HTR Acronym */}
-        <span className="text-xl font-extrabold text-gray-900 uppercase tracking-tight">
+        {/* Acronym uses Heading Color */}
+        <span className="text-xl font-extrabold text-text-heading uppercase tracking-tight">
           HTR
         </span>
-        {/* Full Name - Will be the larger, professional font size */}
-        <span className="text-xs font-semibold text-gray-600 uppercase">
+        {/* Full Name uses Body Color */}
+        <span className="text-xs font-semibold text-text-body uppercase">
           Health Transformation Review
         </span>
       </div>
