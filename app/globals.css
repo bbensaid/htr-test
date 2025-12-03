@@ -1,22 +1,16 @@
 @import "tailwindcss";
 
+@theme {
+  /* CHANGE THIS LINE BELOW */
+  --color-policy: #f97316; /* Now Orange was #1d4ed8; Deep Blue */
+
+  --color-economics: #059669; /* Green (Unchanged) */
+  --color-technology: #4f46e5; /* Indigo (Unchanged) */
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
 }
 
 body {
