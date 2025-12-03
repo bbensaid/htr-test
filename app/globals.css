@@ -1,25 +1,49 @@
-/* app/globals.css */
 @import "tailwindcss";
 
 @theme {
-  /* --- BRAND COLORS --- */
-  --color-policy: #f97316; /* <--- THIS IS ORANGE */
-  --color-economics: #059669; /* GREEN */
-  --color-technology: #4f46e5; /* INDIGO */
+  /* =========================================
+     LAYER 1: BRAND PALETTE (Raw Colors)
+     Change these to shift the entire brand shade.
+     ========================================= */
+  --color-brand-orange: #f97316;
+  --color-brand-green: #059669;
+  --color-brand-indigo: #4f46e5;
+  --color-brand-blue: #1d4ed8;
+  --color-brand-light: #dbeafe;
 
-  /* --- UI COLORS --- */
-  --color-primary: #1d4ed8;
-  --color-primary-light: #dbeafe;
+  /* =========================================
+     LAYER 2: GLOBAL UI (Strict Consistency)
+     These control buttons, inputs, and dropdowns.
+     ========================================= */
+  --color-ui-primary: var(--color-brand-blue); /* Main Action Color */
+  --color-ui-bg-light: var(--color-brand-light);
+  --color-ui-text-on-primary: #ffffff;
+  --color-ui-border: #e5e7eb;
 
-  /* --- TEXT COLORS --- */
+  /* =========================================
+     LAYER 3: CONTEXTUAL CONTENT (Flexibility)
+     Here we decouple the Sidebar from the Main Cards.
+     ========================================= */
+
+  /* --- A. MAIN PAGE CARDS --- */
+  /* Currently mapped to Brand Colors, but can be changed independently */
+  --color-card-policy: var(--color-brand-orange);
+  --color-card-economics: var(--color-brand-green);
+  --color-card-tech: var(--color-brand-indigo);
+
+  /* --- B. SIDEBAR TITLES --- */
+  /* Currently mapped to Brand Colors, BUT SEPARATE VARIABLES.
+     If you want Sidebar Policy to be Blue later, you just change 
+     this single line to: var(--color-brand-blue); 
+  */
+  --color-sidebar-policy: var(--color-brand-orange);
+  --color-sidebar-economics: var(--color-brand-green);
+  --color-sidebar-tech: var(--color-brand-indigo);
+  --color-sidebar-default: #4b5563; /* Gray for non-specific items */
+
+  /* --- TYPOGRAPHY --- */
   --color-text-heading: #111827;
   --color-text-body: #4b5563;
-  --color-text-inverse: #ffffff;
-
-  /* --- SURFACE COLORS --- */
-  --color-surface: #ffffff;
-  --color-surface-muted: #f9fafb;
-  --color-border-subtle: #e5e7eb;
 }
 
 :root {

@@ -1,48 +1,44 @@
-// app/page.tsx (SEMANTIC VERSION - CONNECTS TO GLOBALS.CSS)
-
 import Sidebar from "@/components/Sidebar";
 import Link from "next/link";
 
 const HomePage: React.FC = () => {
-  // We use the semantic class names here.
-  // 'text-policy' looks at globals.css -> sees Orange -> Paints Orange.
   const threePillars = [
     {
       title: "POLICY",
       description:
         "Navigate the rules. Understand the legislative impacts shaping care delivery.",
       href: "/policy",
-      titleColor: "text-policy",
-      borderColor: "border-policy",
+      // MAPPED TO CARD VARIABLES (Decoupled from Sidebar)
+      titleColor: "text-card-policy",
+      borderColor: "border-card-policy",
     },
     {
       title: "ECONOMICS",
       description:
         "Master the value. Analyze market shifts, investment trends, and cost-effectiveness.",
       href: "/economics",
-      titleColor: "text-economics",
-      borderColor: "border-economics",
+      titleColor: "text-card-economics",
+      borderColor: "border-card-economics",
     },
     {
       title: "TECHNOLOGY",
       description:
         "Accelerate innovation. Review the cutting-edge tech redefining patient outcomes.",
       href: "/technology",
-      titleColor: "text-technology",
-      borderColor: "border-technology",
+      titleColor: "text-card-tech",
+      borderColor: "border-card-tech",
     },
   ];
 
   return (
     <div className="flex flex-col lg:flex-row gap-8 mt-6">
-      {/* Sidebar (Left on Desktop, Top on Mobile) */}
+      {/* Sidebar */}
       <div className="order-2 lg:order-1 lg:w-1/4">
         <Sidebar />
       </div>
 
-      {/* Main Content Area (Right on Desktop, Bottom on Mobile) */}
+      {/* Main Content */}
       <div className="order-1 lg:order-2 lg:w-3/4">
-        {/* Headlines uses text-heading */}
         <div className="mb-10 text-center lg:text-left">
           <h1 className="text-5xl md:text-6xl font-extrabold text-text-heading tracking-tight leading-tight mb-2">
             Defining Health's Next Chapter
@@ -53,8 +49,8 @@ const HomePage: React.FC = () => {
           </p>
         </div>
 
-        {/* Intro Block uses Primary Border color */}
-        <div className="mb-12 border-l-4 border-primary pl-4">
+        {/* Intro Block uses UI Primary for consistency */}
+        <div className="mb-12 border-l-4 border-ui-primary pl-4">
           <p className="text-lg text-text-body italic">
             "The healthcare landscape is undergoing an irreversible
             transformation, yet critical decisions are often made in isolation.
@@ -65,7 +61,7 @@ const HomePage: React.FC = () => {
           </p>
         </div>
 
-        <h2 className="text-2xl font-bold text-text-heading mb-6 border-b border-border-subtle pb-2">
+        <h2 className="text-2xl font-bold text-text-heading mb-6 border-b border-ui-border pb-2">
           Explore the Review
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
@@ -73,7 +69,7 @@ const HomePage: React.FC = () => {
             <Link
               key={pillar.title}
               href={pillar.href}
-              className={`block p-6 bg-surface border-t-4 ${pillar.borderColor} rounded-lg shadow-lg hover:shadow-xl transition duration-300 transform hover:-translate-y-1`}
+              className={`block p-6 bg-white border-t-4 ${pillar.borderColor} rounded-lg shadow-lg hover:shadow-xl transition duration-300 transform hover:-translate-y-1`}
             >
               <h3
                 className={`text-xl font-extrabold ${pillar.titleColor} mb-2`}

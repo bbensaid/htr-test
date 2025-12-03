@@ -1,22 +1,20 @@
-// components/Sidebar.tsx
-
 import React from "react";
 import Link from "next/link";
 
 interface SidebarSectionProps {
   title: string;
   items: { href: string; label: string }[];
-  colorClass?: string; // Allows passing "text-policy" etc.
+  colorClass?: string;
 }
 
 const SidebarSection: React.FC<SidebarSectionProps> = ({
   title,
   items,
-  colorClass = "text-primary",
+  colorClass = "text-sidebar-default",
 }) => (
-  <div className="mb-8 p-4 bg-surface border border-border-subtle rounded-lg shadow-sm">
+  <div className="mb-8 p-4 bg-white border border-ui-border rounded-lg shadow-sm">
     <h3
-      className={`text-lg font-bold ${colorClass} mb-3 border-b border-border-subtle pb-2`}
+      className={`text-lg font-bold ${colorClass} mb-3 border-b border-ui-border pb-2`}
     >
       {title}
     </h3>
@@ -40,12 +38,10 @@ const Sidebar: React.FC = () => {
     { href: "/insights/featured", label: "Featured Research" },
     { href: "/insights/editors", label: "Editor's Choice" },
   ];
-
   const contentFormats = [
     { href: "/formats/articles", label: "Blog / Articles" },
     { href: "/formats/videos", label: "Video Library" },
   ];
-
   const trendingKeywords = [
     { href: "/tag/telehealth", label: "#Telehealth Adoption" },
     { href: "/tag/ai-ethics", label: "#AI Ethics" },
@@ -53,35 +49,32 @@ const Sidebar: React.FC = () => {
 
   return (
     <aside className="w-full lg:w-64">
-      {/* 1. LATEST INSIGHTS -> ORANGE (Policy) */}
+      {/* MAPPED TO SIDEBAR VARIABLES */}
       <SidebarSection
         title="LATEST INSIGHTS"
         items={latestInsights}
-        colorClass="text-policy"
+        colorClass="text-sidebar-policy"
       />
-
-      {/* 2. CONTENT FORMATS -> GREEN (Economics) */}
       <SidebarSection
         title="CONTENT FORMATS"
         items={contentFormats}
-        colorClass="text-economics"
+        colorClass="text-sidebar-economics"
       />
-
-      {/* 3. TRENDING KEYWORDS -> INDIGO (Technology) */}
       <SidebarSection
         title="TRENDING KEYWORDS"
         items={trendingKeywords}
-        colorClass="text-technology"
+        colorClass="text-sidebar-tech"
       />
 
-      <div className="p-4 bg-primary-light rounded-lg text-center">
-        <h4 className="font-bold text-primary mb-2">Drive Transformation</h4>
+      {/* CTA uses Global UI Consistency */}
+      <div className="p-4 bg-ui-bg-light rounded-lg text-center">
+        <h4 className="font-bold text-ui-primary mb-2">Drive Transformation</h4>
         <p className="text-sm text-text-body mb-3">
           Download Our Annual Report &rarr;
         </p>
         <Link
           href="/report"
-          className="px-4 py-2 bg-primary text-text-inverse text-sm font-semibold rounded-lg hover:opacity-90 transition duration-150"
+          className="px-4 py-2 bg-ui-primary text-ui-text-on-primary text-sm font-semibold rounded-lg hover:opacity-90 transition duration-150"
         >
           Get the Report
         </Link>
