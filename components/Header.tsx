@@ -1,9 +1,11 @@
+// components/Header.tsx
+
 import React from "react";
 import Link from "next/link";
 import Logo from "./Logo";
 import NavDropdown from "./NavDropdown";
 
-// Using Layer 2 variables (ui-primary) via Tailwind classes
+// --- EXISTING PILLARS ---
 const policyItems = [
   { href: "/policy/regulation", label: "Regulation & Legislation" },
   { href: "/policy/mandates", label: "Public Health Mandates" },
@@ -14,7 +16,7 @@ const policyItems = [
 const economicsItems = [
   { href: "/economics/value", label: "Value-Based Care Models" },
   { href: "/economics/market", label: "Market & Finance" },
-  { href: "/economics/cea", label: "Cost-Effectiveness Analysis (CEA)" },
+  { href: "/economics/cea", label: "Cost-Effectiveness Analysis" },
   { href: "/economics/investment", label: "Healthcare Investment Trends" },
 ];
 
@@ -25,30 +27,54 @@ const technologyItems = [
   { href: "/technology/iot", label: "Wearables & IOT" },
 ];
 
+// --- NEW SECTIONS ---
+
+// 1. ADVISORY (Service Oriented)
+const advisoryItems = [
+  { href: "/advisory/consulting", label: "Strategic Consulting" },
+  { href: "/advisory/research", label: "Custom Research Projects" },
+  { href: "/advisory/reports", label: "Annual Impact Reports" },
+  { href: "/advisory/contact", label: "Hire an Expert" },
+];
+
+// 2. EDUCATION (Learning & Resources)
+const educationItems = [
+  { href: "/education/courses", label: "Executive Masterclasses" },
+  { href: "/education/webinars", label: "Live Webinars & Events" },
+  { href: "/education/glossary", label: "Policy & Tech Glossary" },
+  { href: "/education/case-studies", label: "Real-World Case Studies" },
+];
+
+// Static Links
 const staticNav = [
-  { href: "/review", label: "HTR REVIEW" },
-  { href: "/research", label: "RESEARCH ASSISTANCE" },
   { href: "/about", label: "ABOUT US" },
+  { href: "/faq", label: "FAQ" }, // Added quick link to FAQ
 ];
 
 const Header: React.FC = () => {
   return (
-    <header className="sticky top-0 z-50 bg-white shadow-md">
+    <header className="sticky top-0 z-50 bg-surface shadow-md">
       <div className="container mx-auto p-4 md:px-8 flex justify-between items-center">
+        {/* Logo */}
         <Link href="/">
           <Logo />
         </Link>
 
-        <nav className="hidden md:flex items-center space-x-4">
+        {/* Navigation Menu */}
+        <nav className="hidden xl:flex items-center space-x-6">
           <NavDropdown label="POLICY" items={policyItems} />
           <NavDropdown label="ECONOMICS" items={economicsItems} />
           <NavDropdown label="TECHNOLOGY" items={technologyItems} />
 
+          {/* New Pillars */}
+          <NavDropdown label="ADVISORY" items={advisoryItems} />
+          <NavDropdown label="EDUCATION" items={educationItems} />
+
+          {/* Static Links */}
           {staticNav.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              // Using ui-primary for hover states (CONSISTENCY)
               className="text-text-body hover:text-ui-primary transition duration-150 text-sm font-bold tracking-wider uppercase p-2"
             >
               {item.label}
@@ -56,12 +82,13 @@ const Header: React.FC = () => {
           ))}
         </nav>
 
+        {/* User Tools */}
         <div className="flex items-center space-x-4">
-          <div className="hidden lg:block">
+          <div className="hidden md:block">
             <input
               type="text"
-              placeholder="Search HTR..."
-              className="px-3 py-1 border border-ui-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-ui-primary/50"
+              placeholder="Search..."
+              className="px-3 py-1 border border-ui-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-ui-primary/50 w-32 focus:w-48 transition-all"
             />
           </div>
 
@@ -74,10 +101,9 @@ const Header: React.FC = () => {
 
           <Link
             href="/subscribe"
-            // Using ui-primary for Button Background (CONSISTENCY)
-            className="px-4 py-2 bg-ui-primary text-ui-text-on-primary text-sm font-semibold rounded-lg hover:opacity-90 transition duration-150"
+            className="px-4 py-2 bg-ui-primary text-ui-text-on-primary text-sm font-semibold rounded-lg hover:opacity-90 transition duration-150 shadow-sm"
           >
-            Subscribe
+            Join Community
           </Link>
         </div>
       </div>
