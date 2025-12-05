@@ -1,11 +1,11 @@
-// components/Header.tsx
+// components/Header.tsx (UPDATED WITH FACULTY LINK)
 
 import React from "react";
 import Link from "next/link";
 import Logo from "./Logo";
 import NavDropdown from "./NavDropdown";
 
-// --- EXISTING PILLARS ---
+// Define the content for the dropdowns
 const policyItems = [
   { href: "/policy/regulation", label: "Regulation & Legislation" },
   { href: "/policy/mandates", label: "Public Health Mandates" },
@@ -16,7 +16,7 @@ const policyItems = [
 const economicsItems = [
   { href: "/economics/value", label: "Value-Based Care Models" },
   { href: "/economics/market", label: "Market & Finance" },
-  { href: "/economics/cea", label: "Cost-Effectiveness Analysis" },
+  { href: "/economics/cea", label: "Cost-Effectiveness Analysis (CEA)" },
   { href: "/economics/investment", label: "Healthcare Investment Trends" },
 ];
 
@@ -27,9 +27,6 @@ const technologyItems = [
   { href: "/technology/iot", label: "Wearables & IOT" },
 ];
 
-// --- NEW SECTIONS ---
-
-// 1. ADVISORY (Service Oriented)
 const advisoryItems = [
   { href: "/advisory/consulting", label: "Strategic Consulting" },
   { href: "/advisory/research", label: "Custom Research Projects" },
@@ -37,23 +34,23 @@ const advisoryItems = [
   { href: "/advisory/contact", label: "Hire an Expert" },
 ];
 
-// 2. EDUCATION (Learning & Resources)
+// UPDATED EDUCATION ITEMS
 const educationItems = [
   { href: "/education/courses", label: "Executive Masterclasses" },
+  { href: "/education/faculty", label: "Faculty & Experts" }, // <--- NEW LINK ADDED
   { href: "/education/webinars", label: "Live Webinars & Events" },
   { href: "/education/glossary", label: "Policy & Tech Glossary" },
   { href: "/education/case-studies", label: "Real-World Case Studies" },
 ];
 
-// Static Links
 const staticNav = [
   { href: "/about", label: "ABOUT US" },
-  { href: "/faq", label: "FAQ" }, // Added quick link to FAQ
+  { href: "/faq", label: "FAQ" },
 ];
 
 const Header: React.FC = () => {
   return (
-    <header className="sticky top-0 z-50 bg-surface shadow-md">
+    <header className="sticky top-0 z-50 bg-white shadow-md">
       <div className="container mx-auto p-4 md:px-8 flex justify-between items-center">
         {/* Logo */}
         <Link href="/">
@@ -65,8 +62,6 @@ const Header: React.FC = () => {
           <NavDropdown label="POLICY" items={policyItems} />
           <NavDropdown label="ECONOMICS" items={economicsItems} />
           <NavDropdown label="TECHNOLOGY" items={technologyItems} />
-
-          {/* New Pillars */}
           <NavDropdown label="ADVISORY" items={advisoryItems} />
           <NavDropdown label="EDUCATION" items={educationItems} />
 

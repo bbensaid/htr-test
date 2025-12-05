@@ -2,8 +2,9 @@
 
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import "./globals.css"; // Assumes Tailwind CSS setup here
+import "./globals.css";
 import Header from "@/components/Header";
+import Footer from "@/components/Footer"; // Import the Footer
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,7 +22,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <div className="flex flex-col min-h-screen">
-          {/* Persistent Header Component */}
+          {/* Persistent Header */}
           <Header />
 
           {/* Main Content Area */}
@@ -29,8 +30,8 @@ export default function RootLayout({
             {children}
           </main>
 
-          {/* Optional Footer Placeholder */}
-          {/* <footer className="bg-gray-800 text-white p-4 text-center">...</footer> */}
+          {/* Persistent Footer */}
+          <Footer />
         </div>
       </body>
     </html>
