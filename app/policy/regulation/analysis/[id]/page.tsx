@@ -7,52 +7,28 @@ import CommentsSection from "@/components/CommentsSection";
 
 // 1. STYLE MAP (The "Translator" from Sanity -> Tailwind)
 const ptComponents: PortableTextComponents = {
-  block: {
-    // Normal Paragraphs
-    normal: ({ children }) => (
-      <p className="text-text-body text-lg leading-relaxed mb-6">{children}</p>
-    ),
-    // Header 2 (Big Section Titles)
-    h2: ({ children }) => (
-      <h2 className="text-3xl font-bold text-text-heading mt-12 mb-6 border-l-4 border-card-policy pl-4">
-        {children}
-      </h2>
-    ),
-    // Header 3 (Sub-sections)
-    h3: ({ children }) => (
-      <h3 className="text-2xl font-bold text-text-heading mt-8 mb-4">
-        {children}
-      </h3>
-    ),
-    // Blockquote (The "Key Stat" Grey Box)
-    blockquote: ({ children }) => (
-      <div className="bg-surface-muted p-8 rounded-xl border-l-4 border-card-policy my-8 shadow-sm">
-        <p className="text-xl italic font-medium text-text-heading">
-          {children}
-        </p>
-      </div>
-    ),
-  },
-  list: {
-    bullet: ({ children }) => (
-      <ul className="list-disc pl-6 space-y-3 mb-6 text-text-body text-lg">
-        {children}
-      </ul>
-    ),
-    number: ({ children }) => (
-      <ol className="list-decimal pl-6 space-y-3 mb-6 text-text-body text-lg">
-        {children}
-      </ol>
-    ),
-  },
+  // ... (Keep your existing block and list settings) ...
+
   marks: {
     strong: ({ children }) => (
       <strong className="font-bold text-text-heading">{children}</strong>
     ),
+
+    // NEW: HANDLE THE COLORS
+    "highlight-policy": ({ children }) => (
+      <span className="text-card-policy font-bold">{children}</span>
+    ),
+    "highlight-economics": ({ children }) => (
+      <span className="text-card-economics font-bold">{children}</span>
+    ),
+    "highlight-tech": ({ children }) => (
+      <span className="text-card-tech font-bold">{children}</span>
+    ),
+
     link: ({ value, children }) => (
       <a
         href={value?.href}
-        className="text-card-policy underline hover:text-ui-primary transition font-semibold"
+        className="text-ui-primary underline hover:opacity-80 transition"
       >
         {children}
       </a>

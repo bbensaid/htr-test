@@ -3,7 +3,7 @@ const { createClient } = require("next-sanity");
 const path = require("path");
 const fs = require("fs");
 
-// Load env
+// Load env from root
 require("dotenv").config({ path: path.resolve(__dirname, "../.env.local") });
 
 if (!process.env.SANITY_WRITE_TOKEN) {
@@ -19,38 +19,51 @@ const client = createClient({
   useCdn: false,
 });
 
-// 1. GET FILE NAME FROM COMMAND LINE
+// 1. GET FILE NAME
 const args = process.argv.slice(2);
 if (args.length === 0) {
-  console.error(
-    "❌ Usage Error. Correct command: node scripts/import.js <filename.json>"
-  );
+  console.error("❌ Usage: node scripts/import.js <filename.json>");
+  console.error("   Note: The file must exist inside 'sanity/content/'");
   process.exit(1);
 }
 
 const fileName = args[0];
-const filePath = path.resolve(process.cwd(), fileName);
+
+// 2. RESOLVE PATH (Enforced: sanity/content/)
+const contentDir = path.resolve(process.cwd(), "sanity", "content");
+const filePath = path.join(contentDir, fileName);
 
 async function runImport() {
   try {
-    // 2. READ THE CONTENT FILE
+    // Ensure content directory exists
+    if (!fs.existsSync(contentDir)) {
+      console.error(`❌ Directory missing. Creating: ${contentDir}`);
+      fs.mkdirSync(contentDir, { recursive: true });
+    }
+
+    // Read File
     if (!fs.existsSync(filePath)) {
-      throw new Error(`File not found: ${filePath}`);
+      throw new Error(`File not found in ${contentDir}: ${fileName}`);
     }
 
     const rawData = fs.readFileSync(filePath, "utf8");
     const articleData = JSON.parse(rawData);
 
-    // 3. VALIDATE CRITICAL FIELDS
+    // Validate
     if (!articleData.title || !articleData.body) {
       throw new Error("Invalid JSON: Missing 'title' or 'body'.");
     }
 
     console.log(`🚀 Importing: "${articleData.title}"...`);
 
-    // 4. PUBLISH TO SANITY
+    // Delete existing slug to prevent duplicates (Upsert logic)
+    await client.delete({
+      query: `*[_type == "policyAnalysis" && slug.current == "${articleData.slug.current}"]`,
+    });
+
+    // Create
     const result = await client.create({
-      _type: "policyAnalysis", // The schema type
+      _type: "policyAnalysis",
       ...articleData,
     });
 

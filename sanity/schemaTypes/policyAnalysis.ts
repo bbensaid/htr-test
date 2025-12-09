@@ -84,7 +84,29 @@ export default defineType({
       title: 'Body',
       type: 'array',
       group: 'content',
-      of: [{type: 'block'}],
+      of: [
+        {
+          type: 'block',
+          // 1. DEFINE THE STYLES (Normal, H2, H3, Quote)
+          styles: [
+            {title: 'Normal', value: 'normal'},
+            {title: 'Heading 2', value: 'h2'},
+            {title: 'Heading 3', value: 'h3'},
+            {title: 'Quote', value: 'blockquote'},
+          ],
+          // 2. DEFINE THE DECORATORS (Bold, Italic, AND COLORS)
+          marks: {
+            decorators: [
+              {title: 'Strong', value: 'strong'},
+              {title: 'Emphasis', value: 'em'},
+              // NEW: Custom Color Highlighters
+              {title: 'Policy Orange', value: 'highlight-policy'},
+              {title: 'Econ Green', value: 'highlight-economics'},
+              {title: 'Tech Indigo', value: 'highlight-tech'},
+            ],
+          },
+        },
+      ],
     }),
   ],
 })
