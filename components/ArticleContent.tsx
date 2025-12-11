@@ -21,13 +21,49 @@ const getThemeColors = (pillar: string) => {
     return { border: "border-card-economics", text: "text-card-economics" };
   if (normalized === "technology")
     return { border: "border-card-tech", text: "text-card-tech" };
-  return { border: "border-ui-primary", text: "text-ui-primary" }; // Default
+  return { border: "border-ui-primary", text: "text-ui-primary" };
 };
 
 const ArticleContent: React.FC<ArticleContentProps> = ({ body, pillar }) => {
   const theme = getThemeColors(pillar);
 
   // --- 1. RENDERERS ---
+
+  const AudioRenderer = ({ value }: any) => {
+    // If no file uploaded, return nothing
+    if (!value.audioFile?.asset?.url) return null;
+
+    return (
+      <figure className="my-10 p-6 bg-surface-muted border border-ui-border rounded-xl">
+        <div className="flex items-center gap-4 mb-4">
+          <div className="w-12 h-12 bg-ui-primary rounded-full flex items-center justify-center text-white">
+            {/* Simple Play Icon SVG */}
+            <svg
+              className="w-6 h-6 ml-1"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path d="M8 5v14l11-7z" />
+            </svg>
+          </div>
+          <div>
+            <h4 className="text-lg font-bold text-text-heading leading-tight">
+              {value.title || "Audio Segment"}
+            </h4>
+            {value.duration && (
+              <span className="text-xs font-bold text-text-body uppercase tracking-wider">
+                {value.duration}
+              </span>
+            )}
+          </div>
+        </div>
+        <audio controls className="w-full h-10 rounded">
+          <source src={value.audioFile.asset.url} type="audio/mpeg" />
+          Your browser does not support the audio element.
+        </audio>
+      </figure>
+    );
+  };
 
   const TableRenderer = ({ value }: any) => {
     try {
@@ -36,7 +72,6 @@ const ArticleContent: React.FC<ArticleContentProps> = ({ body, pillar }) => {
         const headers = Object.keys(data[0]);
         return (
           <div className="my-10 overflow-hidden rounded-xl border border-ui-border shadow-sm overflow-x-auto">
-            {/* Dynamic Top Border Color */}
             <div
               className={`h-1 w-full`}
               style={{
@@ -130,6 +165,7 @@ const ArticleContent: React.FC<ArticleContentProps> = ({ body, pillar }) => {
   // --- 2. COMPONENTS CONFIGURATION ---
   const ptComponents: PortableTextComponents = {
     types: {
+      audio: AudioRenderer, // <--- REGISTERED HERE
       video: VideoPlayer,
       image: ImageRenderer,
       code: TableRenderer,

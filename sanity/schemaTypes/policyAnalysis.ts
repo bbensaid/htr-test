@@ -160,6 +160,30 @@ export default defineType({
             },
           ],
         },
+        // 5. AUDIO BLOCK (New!)
+        {
+          type: 'object',
+          name: 'audio',
+          title: 'Audio Player',
+          fields: [
+            {
+              name: 'audioFile',
+              type: 'file',
+              title: 'Upload Audio File (MP3/WAV)',
+              options: {accept: 'audio/*'},
+            },
+            {
+              name: 'title',
+              type: 'string',
+              title: 'Episode Title',
+            },
+            {
+              name: 'duration',
+              type: 'string',
+              title: 'Duration (e.g. 14:20)',
+            },
+          ],
+        },
       ],
     }),
   ],

@@ -7,13 +7,20 @@ import CommentsSection from "@/components/CommentsSection";
 
 // 1. DATA FETCHING (Centralized)
 async function getArticle(slug: string) {
+  // GROQ Query: Fetches content and "expands" video/audio assets to get their URLs
   const query = `*[_type == "policyAnalysis" && slug.current == $slug][0] {
     title, summary, publishedAt, body, pillar,
     body[]{
-      ...,
+      ..., 
       _type == "video" => {
         ...,
         videoFile {
+          asset->{url}
+        }
+      },
+      _type == "audio" => {
+        ..., 
+        audioFile {
           asset->{url}
         }
       }
@@ -34,7 +41,7 @@ export default async function ArticlePageTemplate({
   if (!article)
     return <div className="p-20 text-center">Article not found.</div>;
 
-  // Helper for Badge Colors (Centralized Logic)
+  // Helper for Badge Colors
   const getBadgeColor = (pillar: string) => {
     const p = pillar?.toLowerCase() || "";
     if (p === "policy") return "bg-orange-100 text-orange-800";
