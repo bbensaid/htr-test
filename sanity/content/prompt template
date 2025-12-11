@@ -1,0 +1,65 @@
+Write a deep dive article for the **[Policy / Economics / Technology]** pillar.
+
+**Topic:** [Enter Your Topic Here]
+**Tone:** Executive, actuarial, critical, and data-heavy.
+
+**OUTPUT REQUIREMENT:**
+Provide **only** a single, valid JSON object block. Do not write any conversational text or script code. The output must be ready to save directly as a `.json` file.
+
+**Schema Rules (Strict):**
+The JSON must match this structure exactly to work with my Sanity importer:
+
+{
+"title": "String (Max 60 chars)",
+"slug": { "current": "kebab-case-slug-based-on-title" },
+"pillar": "[Policy / Economics / Technology]",
+"status": "Active",
+"impactLevel": "Critical",
+"summary": "2-sentence executive summary.",
+"publishedAt": "ISO-Date-String",
+"body": [
+// RULES FOR BODY CONTENT:
+// 1. For Headers: Use { "\_type": "block", "style": "h2", "children": [{ "\_type": "span", "text": "1. [Section Title]" }] }
+// 2. For Key Stats/Quotes: Use { "\_type": "block", "style": "blockquote", "children": [{ "\_type": "span", "text": "[Key Data Point]" }] }
+// 3. For Paragraphs: Use { "\_type": "block", "style": "normal", "children": [{ "_type": "span", "text": "Content..." }] }
+// 4. For Bold Text: You MUST split the children array. Example:
+// children: [
+// { "\_type": "span", "text": "The market is " },
+// { "\_type": "span", "text": "crashing", "marks": ["strong"] },
+// { "\_type": "span", "text": " rapidly." }
+// ]
+]
+}
+----------- Specific Example ----------
+Write a deep dive article for the **Economics** pillar.
+
+**Topic:** The Sepsis Cost Curve: Early Detection ROI vs. Treatment Costs
+**Tone:** Executive, actuarial, critical, and data-heavy.
+
+**OUTPUT REQUIREMENT:**
+Provide **only** a single, valid JSON object block. Do not write any conversational text or script code. The output must be ready to save directly as a `.json` file.
+
+**Schema Rules (Strict):**
+The JSON must match this structure exactly to work with my Sanity importer:
+
+{
+"title": "String (Max 60 chars)",
+"slug": { "current": "kebab-case-slug-based-on-title" },
+"pillar": "Economics",
+"status": "Active",
+"impactLevel": "Critical",
+"summary": "2-sentence executive summary.",
+"publishedAt": "ISO-Date-String",
+"body": [
+// RULES FOR BODY CONTENT:
+// 1. For Headers: Use { "\_type": "block", "style": "h2", "children": [{ "\_type": "span", "text": "1. [Section Title]" }] }
+// 2. For Key Stats/Quotes: Use { "\_type": "block", "style": "blockquote", "children": [{ "\_type": "span", "text": "[Key Data Point]" }] }
+// 3. For Paragraphs: Use { "\_type": "block", "style": "normal", "children": [{ "_type": "span", "text": "Content..." }] }
+// 4. For Bold Text: You MUST split the children array. Example:
+// children: [
+// { "\_type": "span", "text": "The market is " },
+// { "\_type": "span", "text": "crashing", "marks": ["strong"] },
+// { "\_type": "span", "text": " rapidly." }
+// ]
+]
+}

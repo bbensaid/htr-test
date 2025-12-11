@@ -11,6 +11,7 @@ export default defineType({
     {name: 'content', title: 'Content'},
   ],
   fields: [
+    // --- METADATA FIELDS ---
     defineField({
       name: 'title',
       title: 'Title',
@@ -39,7 +40,6 @@ export default defineType({
         ],
       },
     }),
-    // FIX FOR UNKNOWN FIELDS ERROR: Explicitly defining them here
     defineField({
       name: 'status',
       title: 'Status',
@@ -79,32 +79,86 @@ export default defineType({
       type: 'datetime',
       group: 'meta',
     }),
+
+    // --- THE BODY (Where the Image lives) ---
     defineField({
       name: 'body',
       title: 'Body',
       type: 'array',
       group: 'content',
       of: [
+        // 1. Text Block
         {
           type: 'block',
-          // 1. DEFINE THE STYLES (Normal, H2, H3, Quote)
           styles: [
             {title: 'Normal', value: 'normal'},
             {title: 'Heading 2', value: 'h2'},
             {title: 'Heading 3', value: 'h3'},
             {title: 'Quote', value: 'blockquote'},
           ],
-          // 2. DEFINE THE DECORATORS (Bold, Italic, AND COLORS)
           marks: {
             decorators: [
               {title: 'Strong', value: 'strong'},
               {title: 'Emphasis', value: 'em'},
-              // NEW: Custom Color Highlighters
               {title: 'Policy Orange', value: 'highlight-policy'},
               {title: 'Econ Green', value: 'highlight-economics'},
               {title: 'Tech Indigo', value: 'highlight-tech'},
             ],
           },
+        },
+        // 2. IMAGE BLOCK (This enables the UI)
+        {
+          type: 'image',
+          title: 'Chart / Image',
+          options: {hotspot: true},
+          fields: [
+            {
+              name: 'caption',
+              type: 'string',
+              title: 'Caption',
+            },
+            {
+              name: 'alt',
+              type: 'string',
+              title: 'Alt Text',
+            },
+          ],
+        },
+        // 3. TABLE BLOCK
+        {
+          type: 'object',
+          name: 'code',
+          title: 'Data Table',
+          fields: [
+            {name: 'code', type: 'text'},
+            {name: 'language', type: 'string'},
+          ],
+        },
+        // 4. VIDEO BLOCK (Upgraded for Local Uploads)
+        {
+          type: 'object',
+          name: 'video',
+          title: 'Video Player',
+          fields: [
+            // Option A: YouTube Link
+            {
+              name: 'url',
+              type: 'url',
+              title: 'YouTube/Vimeo URL',
+            },
+            // Option B: Local File Upload (NEW)
+            {
+              name: 'videoFile',
+              type: 'file',
+              title: 'Upload Video File (MP4/WebM)',
+              options: {accept: 'video/*'},
+            },
+            {
+              name: 'caption',
+              type: 'string',
+              title: 'Caption',
+            },
+          ],
         },
       ],
     }),
