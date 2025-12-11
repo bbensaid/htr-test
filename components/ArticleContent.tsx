@@ -1,18 +1,20 @@
 // components/ArticleContent.tsx
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { PortableText, PortableTextComponents } from "@portabletext/react";
-import { urlFor } from "@/lib/sanity";
+import { urlFor, client } from "@/lib/sanity";
 import VideoPlayer from "./VideoPlayer";
 import Image from "next/image";
+import SmartTooltip from "./SmartTooltip";
+import { useTooltipContext } from "./TooltipContext";
 
 interface ArticleContentProps {
   body: any;
-  pillar: string; // "Policy", "Economics", or "Technology"
+  pillar: string;
 }
 
-// --- HELPERS: Get Colors based on Pillar ---
+// --- 1. HELPER: Get Colors based on Pillar (RESTORED) ---
 const getThemeColors = (pillar: string) => {
   const normalized = pillar?.toLowerCase() || "";
   if (normalized === "policy")
@@ -21,23 +23,67 @@ const getThemeColors = (pillar: string) => {
     return { border: "border-card-economics", text: "text-card-economics" };
   if (normalized === "technology")
     return { border: "border-card-tech", text: "text-card-tech" };
+  if (normalized === "operations")
+    return { border: "border-card-operations", text: "text-card-operations" };
+  if (normalized === "science")
+    return { border: "border-card-science", text: "text-card-science" };
   return { border: "border-ui-primary", text: "text-ui-primary" };
 };
 
+// --- 2. HELPER: Fetch Definitions for Tooltips ---
+async function fetchDefinitions() {
+  // Gracefully handle case where definitions might not exist yet
+  try {
+    return await client.fetch(`*[_type == "definition"]{term, description}`);
+  } catch (err) {
+    console.error("Failed to fetch definitions", err);
+    return [];
+  }
+}
+
 const ArticleContent: React.FC<ArticleContentProps> = ({ body, pillar }) => {
   const theme = getThemeColors(pillar);
+  const { showTooltips } = useTooltipContext();
+  const [definitions, setDefinitions] = useState<any[]>([]);
 
-  // --- 1. RENDERERS ---
+  // Load glossary on mount
+  useEffect(() => {
+    fetchDefinitions().then(setDefinitions);
+  }, []);
+
+  // --- 3. AUTO-LINKER LOGIC ---
+  const renderTextWithTooltips = (text: string) => {
+    if (!showTooltips || definitions.length === 0) return text;
+
+    // Escape special regex characters in terms to prevent crashes
+    const safeTerms = definitions.map((d) =>
+      d.term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+    );
+
+    // Create regex pattern
+    const pattern = new RegExp(`\\b(${safeTerms.join("|")})\\b`, "g");
+
+    const parts = text.split(pattern);
+
+    return parts.map((part, i) => {
+      const def = definitions.find((d) => d.term === part);
+      if (def) {
+        return (
+          <SmartTooltip key={i} term={part} definition={def.description} />
+        );
+      }
+      return part;
+    });
+  };
+
+  // --- 4. RENDERERS ---
 
   const AudioRenderer = ({ value }: any) => {
-    // If no file uploaded, return nothing
     if (!value.audioFile?.asset?.url) return null;
-
     return (
       <figure className="my-10 p-6 bg-surface-muted border border-ui-border rounded-xl">
         <div className="flex items-center gap-4 mb-4">
           <div className="w-12 h-12 bg-ui-primary rounded-full flex items-center justify-center text-white">
-            {/* Simple Play Icon SVG */}
             <svg
               className="w-6 h-6 ml-1"
               fill="currentColor"
@@ -162,20 +208,29 @@ const ArticleContent: React.FC<ArticleContentProps> = ({ body, pillar }) => {
     );
   };
 
-  // --- 2. COMPONENTS CONFIGURATION ---
+  // --- 5. COMPONENTS CONFIGURATION ---
   const ptComponents: PortableTextComponents = {
     types: {
-      audio: AudioRenderer, // <--- REGISTERED HERE
+      audio: AudioRenderer,
       video: VideoPlayer,
       image: ImageRenderer,
       code: TableRenderer,
     },
+
+    // OVERRIDE NORMAL TEXT BLOCK TO USE AUTO-LINKER
     block: {
-      normal: ({ children }) => (
-        <p className="text-text-body text-lg leading-relaxed mb-6">
-          {children}
-        </p>
-      ),
+      normal: ({ children }: any) => {
+        return (
+          <p className="text-text-body text-lg leading-relaxed mb-6">
+            {React.Children.map(children, (child) => {
+              if (typeof child === "string") {
+                return renderTextWithTooltips(child);
+              }
+              return child;
+            })}
+          </p>
+        );
+      },
       h2: ({ children }) => (
         <h2
           className={`text-3xl font-bold text-text-heading mt-12 mb-6 border-l-4 ${theme.border} pl-4`}
@@ -231,6 +286,23 @@ const ArticleContent: React.FC<ArticleContentProps> = ({ body, pillar }) => {
       "highlight-tech": ({ children }) => (
         <span className="text-card-tech font-bold">{children}</span>
       ),
+      "highlight-operations": ({ children }) => (
+        <span className="text-card-operations font-bold">{children}</span>
+      ),
+      "highlight-science": ({ children }) => (
+        <span className="text-card-science font-bold">{children}</span>
+      ),
+
+      // Handle Manual Definition Marks (from Studio)
+      definition: ({ value, children }: any) => {
+        if (!value?.reference) return <span>{children}</span>;
+        return (
+          <SmartTooltip
+            term={children}
+            definition={value.reference.description}
+          />
+        );
+      },
     },
   };
 

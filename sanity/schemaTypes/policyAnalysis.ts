@@ -11,7 +11,6 @@ export default defineType({
     {name: 'content', title: 'Content'},
   ],
   fields: [
-    // --- METADATA FIELDS ---
     defineField({
       name: 'title',
       title: 'Title',
@@ -27,6 +26,8 @@ export default defineType({
       options: {source: 'title'},
       validation: (rule) => rule.required(),
     }),
+
+    // --- UPDATED PILLAR LIST (5 PILLARS) ---
     defineField({
       name: 'pillar',
       title: 'Pillar',
@@ -34,12 +35,15 @@ export default defineType({
       group: 'meta',
       options: {
         list: [
-          {title: 'Policy', value: 'Policy'},
-          {title: 'Economics', value: 'Economics'},
-          {title: 'Technology', value: 'Technology'},
+          {title: 'Policy (Orange)', value: 'Policy'},
+          {title: 'Economics (Green)', value: 'Economics'},
+          {title: 'Technology (Indigo)', value: 'Technology'},
+          {title: 'Operations (Rose)', value: 'Operations'}, // NEW
+          {title: 'Science (Teal)', value: 'Science'}, // NEW
         ],
       },
     }),
+
     defineField({
       name: 'status',
       title: 'Status',
@@ -80,7 +84,7 @@ export default defineType({
       group: 'meta',
     }),
 
-    // --- THE BODY (Where the Image lives) ---
+    // --- BODY FIELD (Updated with New Colors) ---
     defineField({
       name: 'body',
       title: 'Body',
@@ -104,27 +108,65 @@ export default defineType({
               {title: 'Econ Green', value: 'highlight-economics'},
               {title: 'Tech Indigo', value: 'highlight-tech'},
             ],
+            // NEW: ANNOTATIONS (Links & Tooltips)
+            annotations: [
+              {
+                name: 'link',
+                type: 'object',
+                title: 'External Link',
+                fields: [
+                  {
+                    name: 'href',
+                    type: 'url',
+                    title: 'URL',
+                  },
+                ],
+              },
+              {
+                name: 'definition',
+                type: 'object',
+                title: 'Define Term',
+                fields: [
+                  {
+                    name: 'reference',
+                    type: 'reference',
+                    to: [{type: 'definition'}], // Links to the schema we just made
+                  },
+                ],
+              },
+            ],
           },
         },
-        // 2. IMAGE BLOCK (This enables the UI)
+
+        // 2. Video Block
+        {
+          type: 'object',
+          name: 'video',
+          title: 'Video Player',
+          fields: [
+            {name: 'url', type: 'url', title: 'YouTube/Vimeo URL'},
+            {
+              name: 'videoFile',
+              type: 'file',
+              title: 'Upload Video File',
+              options: {accept: 'video/*'},
+            },
+            {name: 'caption', type: 'string', title: 'Caption'},
+          ],
+        },
+
+        // 3. Image Block
         {
           type: 'image',
           title: 'Chart / Image',
           options: {hotspot: true},
           fields: [
-            {
-              name: 'caption',
-              type: 'string',
-              title: 'Caption',
-            },
-            {
-              name: 'alt',
-              type: 'string',
-              title: 'Alt Text',
-            },
+            {name: 'caption', type: 'string', title: 'Caption'},
+            {name: 'alt', type: 'string', title: 'Alt Text'},
           ],
         },
-        // 3. TABLE BLOCK
+
+        // 4. Code/Table Block
         {
           type: 'object',
           name: 'code',
@@ -132,56 +174,6 @@ export default defineType({
           fields: [
             {name: 'code', type: 'text'},
             {name: 'language', type: 'string'},
-          ],
-        },
-        // 4. VIDEO BLOCK (Upgraded for Local Uploads)
-        {
-          type: 'object',
-          name: 'video',
-          title: 'Video Player',
-          fields: [
-            // Option A: YouTube Link
-            {
-              name: 'url',
-              type: 'url',
-              title: 'YouTube/Vimeo URL',
-            },
-            // Option B: Local File Upload (NEW)
-            {
-              name: 'videoFile',
-              type: 'file',
-              title: 'Upload Video File (MP4/WebM)',
-              options: {accept: 'video/*'},
-            },
-            {
-              name: 'caption',
-              type: 'string',
-              title: 'Caption',
-            },
-          ],
-        },
-        // 5. AUDIO BLOCK (New!)
-        {
-          type: 'object',
-          name: 'audio',
-          title: 'Audio Player',
-          fields: [
-            {
-              name: 'audioFile',
-              type: 'file',
-              title: 'Upload Audio File (MP3/WAV)',
-              options: {accept: 'audio/*'},
-            },
-            {
-              name: 'title',
-              type: 'string',
-              title: 'Episode Title',
-            },
-            {
-              name: 'duration',
-              type: 'string',
-              title: 'Duration (e.g. 14:20)',
-            },
           ],
         },
       ],

@@ -1,51 +1,58 @@
+/* app/globals.css */
 @import "tailwindcss";
 
 @theme {
   /* =========================================
-     LAYER 1: BRAND PALETTE (Raw Colors)
-     Change these to shift the entire brand shade.
+     LAYER 1: BRAND PALETTE (The 5 Pillars)
      ========================================= */
-  --color-brand-orange: #f97316;
-  --color-brand-green: #059669;
-  --color-brand-indigo: #4f46e5;
-  --color-brand-blue: #1d4ed8;
-  --color-brand-light: #dbeafe;
+  --color-brand-orange: #f97316; /* Policy */
+  --color-brand-green: #059669; /* Economics */
+  --color-brand-indigo: #4f46e5; /* Technology */
+  --color-brand-rose: #e11d48; /* Operations (New) */
+  --color-brand-teal: #0d9488; /* Science (New) */
+
+  --color-brand-blue: #1d4ed8; /* UI Primary */
+  --color-brand-light: #dbeafe; /* UI Backgrounds */
 
   /* =========================================
-     LAYER 2: GLOBAL UI (Strict Consistency)
-     These control buttons, inputs, and dropdowns.
+     LAYER 2: GLOBAL UI (Functional)
      ========================================= */
-  --color-ui-primary: var(--color-brand-blue); /* Main Action Color */
+  --color-ui-primary: var(--color-brand-blue);
   --color-ui-bg-light: var(--color-brand-light);
   --color-ui-text-on-primary: #ffffff;
   --color-ui-border: #e5e7eb;
 
   /* =========================================
-     LAYER 3: CONTEXTUAL CONTENT (Flexibility)
-     Here we decouple the Sidebar from the Main Cards.
+     LAYER 3: CONTEXTUAL CONTENT (Pillar Mapping)
      ========================================= */
 
-  /* --- A. MAIN PAGE CARDS --- */
-  /* Currently mapped to Brand Colors, but can be changed independently */
+  /* --- Homepage Card Colors --- */
   --color-card-policy: var(--color-brand-orange);
   --color-card-economics: var(--color-brand-green);
   --color-card-tech: var(--color-brand-indigo);
+  --color-card-operations: var(--color-brand-rose); /* New */
+  --color-card-science: var(--color-brand-teal); /* New */
 
-  /* --- B. SIDEBAR TITLES --- */
-  /* Currently mapped to Brand Colors, BUT SEPARATE VARIABLES.
-     If you want Sidebar Policy to be Blue later, you just change 
-     this single line to: var(--color-brand-blue); 
-  */
+  /* --- Sidebar Title Colors --- */
   --color-sidebar-policy: var(--color-brand-orange);
   --color-sidebar-economics: var(--color-brand-green);
   --color-sidebar-tech: var(--color-brand-indigo);
-  --color-sidebar-default: #4b5563; /* Gray for non-specific items */
+  --color-sidebar-operations: var(--color-brand-rose); /* New */
+  --color-sidebar-science: var(--color-brand-teal); /* New */
 
-  /* --- TYPOGRAPHY --- */
+  --color-sidebar-default: #4b5563;
+
+  /* --- Typography --- */
   --color-text-heading: #111827;
   --color-text-body: #4b5563;
+  --color-text-inverse: #ffffff;
+
+  /* --- Surfaces --- */
+  --color-surface: #ffffff;
+  --color-surface-muted: #f9fafb;
 }
 
+/* Base Reset */
 :root {
   --background: #ffffff;
   --foreground: #171717;

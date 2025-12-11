@@ -1,3 +1,5 @@
+// components/Sidebar.tsx
+
 import React from "react";
 import Link from "next/link";
 
@@ -13,6 +15,7 @@ const SidebarSection: React.FC<SidebarSectionProps> = ({
   colorClass = "text-sidebar-default",
 }) => (
   <div className="mb-8 p-4 bg-white border border-ui-border rounded-lg shadow-sm">
+    {/* Dynamic Color Title */}
     <h3
       className={`text-lg font-bold ${colorClass} mb-3 border-b border-ui-border pb-2`}
     >
@@ -34,49 +37,56 @@ const SidebarSection: React.FC<SidebarSectionProps> = ({
 );
 
 const Sidebar: React.FC = () => {
+  // Data for the sidebar sections
   const latestInsights = [
-    { href: "/insights/featured", label: "Featured Research" },
-    { href: "/insights/editors", label: "Editor's Choice" },
+    { href: "/policy/regulation", label: "Legislative Tracker" },
+    { href: "/economics/market", label: "M&A Watchlist" },
   ];
-  const contentFormats = [
-    { href: "/formats/articles", label: "Blog / Articles" },
-    { href: "/formats/videos", label: "Video Library" },
+
+  const operationalTrends = [
+    { href: "/operations/workforce", label: "Staffing Ratios" },
+    { href: "/operations/workflow", label: "Throughput Optimization" },
   ];
-  const trendingKeywords = [
-    { href: "/tag/telehealth", label: "#Telehealth Adoption" },
-    { href: "/tag/ai-ethics", label: "#AI Ethics" },
+
+  const scienceWatch = [
+    { href: "/science/pharma", label: "FDA Approval Pipeline" },
+    { href: "/science/genomics", label: "CRISPR Market Data" },
   ];
 
   return (
     <aside className="w-full lg:w-64">
-      {/* MAPPED TO SIDEBAR VARIABLES */}
+      {/* 1. Standard Insights (Policy Orange) */}
       <SidebarSection
-        title="LATEST INSIGHTS"
+        title="LATEST BRIEFINGS"
         items={latestInsights}
         colorClass="text-sidebar-policy"
       />
+
+      {/* 2. Operations (Rose/Red) - DEMONSTRATING NEW PILLAR */}
       <SidebarSection
-        title="CONTENT FORMATS"
-        items={contentFormats}
-        colorClass="text-sidebar-economics"
-      />
-      <SidebarSection
-        title="TRENDING KEYWORDS"
-        items={trendingKeywords}
-        colorClass="text-sidebar-tech"
+        title="OPERATIONAL EFFICIENCY"
+        items={operationalTrends}
+        colorClass="text-sidebar-operations"
       />
 
-      {/* CTA uses Global UI Consistency */}
-      <div className="p-4 bg-ui-bg-light rounded-lg text-center">
-        <h4 className="font-bold text-ui-primary mb-2">Drive Transformation</h4>
+      {/* 3. Science (Teal/Cyan) - DEMONSTRATING NEW PILLAR */}
+      <SidebarSection
+        title="CLINICAL INNOVATION"
+        items={scienceWatch}
+        colorClass="text-sidebar-science"
+      />
+
+      {/* CTA Box */}
+      <div className="p-4 bg-ui-bg-light rounded-lg text-center mt-6">
+        <h4 className="font-bold text-ui-primary mb-2">HTR Academy</h4>
         <p className="text-sm text-text-body mb-3">
-          Download Our Annual Report &rarr;
+          Get certified in Health Strategy.
         </p>
         <Link
-          href="/report"
-          className="px-4 py-2 bg-ui-primary text-ui-text-on-primary text-sm font-semibold rounded-lg hover:opacity-90 transition duration-150"
+          href="/education/courses"
+          className="block px-4 py-2 bg-ui-primary text-ui-text-on-primary text-sm font-semibold rounded-lg hover:opacity-90 transition"
         >
-          Get the Report
+          View Courses
         </Link>
       </div>
     </aside>

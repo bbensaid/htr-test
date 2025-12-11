@@ -1,38 +1,34 @@
-// app/layout.tsx
+// app/layout.tsx (Updated)
 
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
-import Footer from "@/components/Footer"; // Import the Footer
+import Footer from "@/components/Footer";
+import { TooltipProvider } from "@/components/TooltipContext"; // <--- IMPORT
 
 const inter = Inter({ subsets: ["latin"] });
-
-export const metadata: Metadata = {
-  title: "Health Transformation Review",
-  description: "Policy. Economics. Technology.",
-};
+// ... metadata ...
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="en">
       <body className={inter.className}>
-        <div className="flex flex-col min-h-screen">
-          {/* Persistent Header */}
-          <Header />
-
-          {/* Main Content Area */}
-          <main className="flex-grow container mx-auto p-4 md:px-8">
-            {children}
-          </main>
-
-          {/* Persistent Footer */}
-          <Footer />
-        </div>
+        <TooltipProvider>
+          {" "}
+          {/* <--- WRAP EVERYTHING */}
+          <div className="flex flex-col min-h-screen">
+            <Header />
+            <main className="flex-grow container mx-auto p-4 md:px-8">
+              {children}
+            </main>
+            <Footer />
+          </div>
+        </TooltipProvider>
       </body>
     </html>
   );
