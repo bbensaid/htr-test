@@ -21,13 +21,13 @@ const Footer: React.FC = () => {
             </p>
             <div className="flex space-x-4 pt-2">
               {/* Social Placeholders */}
-              <div className="w-8 h-8 bg-ui-bg-light rounded-full flex items-center justify-center text-ui-primary font-bold text-xs">
+              <div className="w-8 h-8 bg-ui-bg-light rounded-full flex items-center justify-center text-ui-primary font-bold text-xs cursor-pointer hover:opacity-80">
                 LI
               </div>
-              <div className="w-8 h-8 bg-ui-bg-light rounded-full flex items-center justify-center text-ui-primary font-bold text-xs">
+              <div className="w-8 h-8 bg-ui-bg-light rounded-full flex items-center justify-center text-ui-primary font-bold text-xs cursor-pointer hover:opacity-80">
                 X
               </div>
-              <div className="w-8 h-8 bg-ui-bg-light rounded-full flex items-center justify-center text-ui-primary font-bold text-xs">
+              <div className="w-8 h-8 bg-ui-bg-light rounded-full flex items-center justify-center text-ui-primary font-bold text-xs cursor-pointer hover:opacity-80">
                 YT
               </div>
             </div>
@@ -65,10 +65,18 @@ const Footer: React.FC = () => {
               </li>
               <li>
                 <Link
-                  href="/advisory"
+                  href="/operations"
                   className="hover:text-ui-primary transition"
                 >
-                  Advisory Services
+                  Clinical Operations
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/science"
+                  className="hover:text-ui-primary transition"
+                >
+                  Life Sciences
                 </Link>
               </li>
             </ul>
@@ -88,6 +96,12 @@ const Footer: React.FC = () => {
                   About HTR
                 </Link>
               </li>
+              <li>
+                <Link href="/faq" className="hover:text-ui-primary transition">
+                  FAQ
+                </Link>
+              </li>{" "}
+              {/* ADDED HERE */}
               <li>
                 <Link
                   href="/advisory/contact"
@@ -109,7 +123,7 @@ const Footer: React.FC = () => {
                   href="/education"
                   className="hover:text-ui-primary transition"
                 >
-                  Learning Hub
+                  HTR Academy
                 </Link>
               </li>
             </ul>

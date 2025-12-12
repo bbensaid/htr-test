@@ -1,11 +1,11 @@
-// components/Header.tsx (CLEAN VERSION - NO TOGGLE)
-"use client";
+// components/Header.tsx (FIXED WIDTH TO MATCH PAGE CONTENT)
 
 import React from "react";
 import Link from "next/link";
 import Logo from "./Logo";
 import NavDropdown from "./NavDropdown";
 
+// --- 1. INTELLIGENCE PILLARS (Left) ---
 const policyItems = [
   { href: "/policy/regulation", label: "Regulation & Legislation" },
   { href: "/policy/mandates", label: "Public Health Mandates" },
@@ -41,6 +41,7 @@ const scienceItems = [
   { href: "/science/medtech", label: "MedTech Devices" },
 ];
 
+// --- 2. SERVICES (Right) ---
 const advisoryItems = [
   { href: "/advisory/consulting", label: "Strategic Consulting" },
   { href: "/advisory/research", label: "Custom Research Projects" },
@@ -56,22 +57,20 @@ const academyItems = [
   { href: "/education/case-studies", label: "Case Studies Library" },
 ];
 
-const staticNav = [
-  { href: "/about", label: "ABOUT US" },
-  { href: "/faq", label: "FAQ" },
-];
-
 const Header: React.FC = () => {
   return (
     <header className="sticky top-0 z-50 bg-white shadow-md">
-      <div className="container mx-auto p-4 md:px-8 flex flex-col xl:flex-row justify-between items-center gap-4">
-        {/* LEFT: Brand & Intelligence Pillars */}
-        <div className="flex items-center gap-8 w-full xl:w-auto justify-between xl:justify-start">
+      {/* CRITICAL FIX: Reverted 'w-full px-6' to 'container mx-auto p-4 md:px-8' 
+         This ensures the header width aligns perfectly with your Sidebar/Content grid.
+      */}
+      <div className="container mx-auto p-4 md:px-8 flex flex-col xl:flex-row items-center justify-between gap-4">
+        {/* LEFT GROUP: Logo + Pillars */}
+        <div className="flex items-center gap-6 w-full xl:w-auto justify-between xl:justify-start">
           <Link href="/">
             <Logo />
           </Link>
 
-          {/* Pillars Navigation */}
+          {/* Pillars: Hidden on small screens, flex on XL */}
           <nav className="hidden xl:flex items-center space-x-1">
             <NavDropdown label="POLICY" items={policyItems} />
             <NavDropdown label="ECONOMICS" items={economicsItems} />
@@ -81,31 +80,39 @@ const Header: React.FC = () => {
           </nav>
         </div>
 
-        {/* RIGHT: Utility & Services */}
-        <div className="flex items-center gap-6">
+        {/* CENTER GROUP: Search (Responsive Width) */}
+        {/* Removed fixed margin, allowing it to flex naturally in the center space */}
+        <div className="hidden md:flex flex-grow justify-center px-4 max-w-lg">
+          <div className="relative w-full">
+            <input
+              type="text"
+              placeholder="Search..."
+              className="w-full px-4 py-2 pl-10 border border-ui-border rounded-full text-sm bg-surface-muted focus:outline-none focus:ring-2 focus:ring-ui-primary focus:bg-white transition-all shadow-sm"
+            />
+            <svg
+              className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              />
+            </svg>
+          </div>
+        </div>
+
+        {/* RIGHT GROUP: Services + Auth */}
+        <div className="flex items-center gap-6 w-full xl:w-auto justify-end">
           <nav className="hidden md:flex items-center space-x-2 border-r border-ui-border pr-6">
             <NavDropdown label="ACADEMY" items={academyItems} />
             <NavDropdown label="ADVISORY" items={advisoryItems} />
-            {staticNav.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="text-text-body hover:text-ui-primary transition duration-150 text-sm font-bold tracking-wider uppercase p-2"
-              >
-                {item.label}
-              </Link>
-            ))}
           </nav>
 
           <div className="flex items-center gap-4">
-            <div className="hidden md:block">
-              <input
-                type="text"
-                placeholder="Search..."
-                className="px-3 py-1 border border-ui-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-ui-primary/50 w-32 focus:w-48 transition-all"
-              />
-            </div>
-
             <Link
               href="/login"
               className="text-sm font-bold text-text-body hover:text-ui-primary whitespace-nowrap"
