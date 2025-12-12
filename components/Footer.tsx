@@ -20,7 +20,6 @@ const Footer: React.FC = () => {
               Health Policy, Economics, and Technology.
             </p>
             <div className="flex space-x-4 pt-2">
-              {/* Social Placeholders */}
               <div className="w-8 h-8 bg-ui-bg-light rounded-full flex items-center justify-center text-ui-primary font-bold text-xs cursor-pointer hover:opacity-80">
                 LI
               </div>
@@ -33,7 +32,7 @@ const Footer: React.FC = () => {
             </div>
           </div>
 
-          {/* Column 2: Pillars */}
+          {/* Column 2: Pillars (Science Removed) */}
           <div>
             <h4 className="font-bold text-text-heading mb-4 uppercase text-xs tracking-wider">
               Core Pillars
@@ -71,14 +70,6 @@ const Footer: React.FC = () => {
                   Clinical Operations
                 </Link>
               </li>
-              <li>
-                <Link
-                  href="/science"
-                  className="hover:text-ui-primary transition"
-                >
-                  Life Sciences
-                </Link>
-              </li>
             </ul>
           </div>
 
@@ -100,8 +91,7 @@ const Footer: React.FC = () => {
                 <Link href="/faq" className="hover:text-ui-primary transition">
                   FAQ
                 </Link>
-              </li>{" "}
-              {/* ADDED HERE */}
+              </li>
               <li>
                 <Link
                   href="/advisory/contact"
@@ -150,7 +140,7 @@ const Footer: React.FC = () => {
           </div>
         </div>
 
-        {/* Bottom Section: Copyright & Legal */}
+        {/* Bottom Section */}
         <div className="border-t border-ui-border pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-text-body">
           <p>
             &copy; {new Date().getFullYear()} Health Transformation Review. All

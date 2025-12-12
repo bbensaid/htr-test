@@ -1,11 +1,11 @@
-// components/Header.tsx (FIXED WIDTH TO MATCH PAGE CONTENT)
+// components/Header.tsx
 
 import React from "react";
 import Link from "next/link";
 import Logo from "./Logo";
 import NavDropdown from "./NavDropdown";
 
-// --- 1. INTELLIGENCE PILLARS (Left) ---
+// --- 1. INTELLIGENCE PILLARS ---
 const policyItems = [
   { href: "/policy/regulation", label: "Regulation & Legislation" },
   { href: "/policy/mandates", label: "Public Health Mandates" },
@@ -34,14 +34,7 @@ const operationsItems = [
   { href: "/operations/sites", label: "Alternative Sites (ASC/Home)" },
 ];
 
-const scienceItems = [
-  { href: "/science/pharma", label: "Pharma & Biotech" },
-  { href: "/science/trials", label: "Clinical Trials R&D" },
-  { href: "/science/genomics", label: "Genomics & Precision Med" },
-  { href: "/science/medtech", label: "MedTech Devices" },
-];
-
-// --- 2. SERVICES (Right) ---
+// --- 2. SERVICES (Right Side) ---
 const advisoryItems = [
   { href: "/advisory/consulting", label: "Strategic Consulting" },
   { href: "/advisory/research", label: "Custom Research Projects" },
@@ -60,29 +53,41 @@ const academyItems = [
 const Header: React.FC = () => {
   return (
     <header className="sticky top-0 z-50 bg-white shadow-md">
-      {/* CRITICAL FIX: Reverted 'w-full px-6' to 'container mx-auto p-4 md:px-8' 
-         This ensures the header width aligns perfectly with your Sidebar/Content grid.
-      */}
-      <div className="container mx-auto p-4 md:px-8 flex flex-col xl:flex-row items-center justify-between gap-4">
+      <div className="container mx-auto p-4 md:px-8 flex flex-col xl:flex-row items-center justify-between gap-1">
         {/* LEFT GROUP: Logo + Pillars */}
-        <div className="flex items-center gap-6 w-full xl:w-auto justify-between xl:justify-start">
+        <div className="flex items-center gap-16 flex-shrink-0 w-full xl:w-auto justify-between xl:justify-start">
           <Link href="/">
             <Logo />
           </Link>
 
-          {/* Pillars: Hidden on small screens, flex on XL */}
-          <nav className="hidden xl:flex items-center space-x-1">
-            <NavDropdown label="POLICY" items={policyItems} />
-            <NavDropdown label="ECONOMICS" items={economicsItems} />
-            <NavDropdown label="TECHNOLOGY" items={technologyItems} />
-            <NavDropdown label="OPERATIONS" items={operationsItems} />
-            <NavDropdown label="SCIENCE" items={scienceItems} />
+          {/* Pillars Navigation - Zero spacing between items (controlled by button padding) */}
+          <nav className="hidden xl:flex items-center space-x-0">
+            <NavDropdown
+              label="POLICY"
+              items={policyItems}
+              colorClass="text-card-policy"
+            />
+            <NavDropdown
+              label="ECONOMICS"
+              items={economicsItems}
+              colorClass="text-card-economics"
+            />
+            <NavDropdown
+              label="TECHNOLOGY"
+              items={technologyItems}
+              colorClass="text-card-tech"
+            />
+            <NavDropdown
+              label="OPERATIONS"
+              items={operationsItems}
+              colorClass="text-card-operations"
+            />
           </nav>
         </div>
 
-        {/* CENTER GROUP: Search (Responsive Width) */}
-        {/* Removed fixed margin, allowing it to flex naturally in the center space */}
-        <div className="hidden md:flex flex-grow justify-center px-4 max-w-lg">
+        {/* CENTER GROUP: Search */}
+        {/* Maximum Expansion: No margins, no max-width constraints */}
+        <div className="hidden md:flex flex-grow justify-center min-w-0 px-2">
           <div className="relative w-full">
             <input
               type="text"
@@ -106,22 +111,23 @@ const Header: React.FC = () => {
         </div>
 
         {/* RIGHT GROUP: Services + Auth */}
-        <div className="flex items-center gap-6 w-full xl:w-auto justify-end">
-          <nav className="hidden md:flex items-center space-x-2 border-r border-ui-border pr-6">
+        <div className="flex items-center gap-1 flex-shrink-0 w-full xl:w-auto justify-end">
+          {/* Services - Zero spacing */}
+          <nav className="hidden md:flex items-center space-x-0 border-r border-ui-border pr-2">
             <NavDropdown label="ACADEMY" items={academyItems} />
             <NavDropdown label="ADVISORY" items={advisoryItems} />
           </nav>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-1 pl-1">
             <Link
               href="/login"
-              className="text-sm font-bold text-text-body hover:text-ui-primary whitespace-nowrap"
+              className="text-sm font-bold text-text-body hover:text-ui-primary whitespace-nowrap px-1"
             >
               Login
             </Link>
             <Link
               href="/subscribe"
-              className="px-5 py-2 bg-ui-primary text-ui-text-on-primary text-sm font-bold rounded-lg hover:opacity-90 transition shadow-sm whitespace-nowrap"
+              className="px-4 py-2 bg-ui-primary text-ui-text-on-primary text-sm font-bold rounded-lg hover:opacity-90 transition shadow-sm whitespace-nowrap"
             >
               Subscribe
             </Link>

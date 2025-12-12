@@ -1,18 +1,17 @@
-// app/page.tsx (THE 5-PILLAR NEWSROOM LAYOUT)
+// app/page.tsx (Science Removed)
 
 import Sidebar from "@/components/Sidebar";
 import NewsTicker from "@/components/NewsTicker";
 import Link from "next/link";
 
 const HomePage: React.FC = () => {
-  // The 5 Strategic Pillars
+  // The 4 Strategic Pillars (Science Removed)
   const pillars = [
     {
       title: "POLICY",
       icon: "🏛️",
       description: "Regulation, Mandates & Global Frameworks.",
       href: "/policy",
-      // Orange Theme
       titleColor: "text-card-policy",
       borderColor: "border-card-policy",
     },
@@ -21,7 +20,6 @@ const HomePage: React.FC = () => {
       icon: "📈",
       description: "Finance, Markets & Value-Based Care.",
       href: "/economics",
-      // Green Theme
       titleColor: "text-card-economics",
       borderColor: "border-card-economics",
     },
@@ -30,7 +28,6 @@ const HomePage: React.FC = () => {
       icon: "⚡",
       description: "AI, Digital Health & Cyber Infrastructure.",
       href: "/technology",
-      // Indigo Theme
       titleColor: "text-card-tech",
       borderColor: "border-card-tech",
     },
@@ -39,18 +36,8 @@ const HomePage: React.FC = () => {
       icon: "🏥",
       description: "Workforce, Workflow & Care Delivery.",
       href: "/operations",
-      // Rose Theme (New)
       titleColor: "text-card-operations",
       borderColor: "border-card-operations",
-    },
-    {
-      title: "SCIENCE",
-      icon: "🧬",
-      description: "Pharma, Biotech & Clinical Innovation.",
-      href: "/science",
-      // Teal Theme (New)
-      titleColor: "text-card-science",
-      borderColor: "border-card-science",
     },
   ];
 
@@ -72,12 +59,12 @@ const HomePage: React.FC = () => {
             Intelligence for the Health Economy
           </h1>
           <p className="text-xl text-text-body font-medium max-w-2xl">
-            Deconstructing the convergence of Policy, Capital, and Science to
+            Deconstructing the convergence of Policy, Capital, and Operations to
             drive systemic transformation.
           </p>
         </div>
 
-        {/* 3. CHART OF THE DAY (Data-First Visualization) */}
+        {/* 3. CHART OF THE DAY */}
         <div className="mb-12 bg-surface border border-ui-border rounded-xl p-8 shadow-sm">
           <div className="flex justify-between items-center mb-6">
             <h3 className="text-sm font-bold text-ui-primary uppercase tracking-widest">
@@ -120,13 +107,12 @@ const HomePage: React.FC = () => {
           </div>
         </div>
 
-        {/* 4. THE 5-PILLAR GRID */}
+        {/* 4. THE 4-PILLAR GRID */}
         <h2 className="text-2xl font-bold text-text-heading mb-6 border-b border-ui-border pb-2">
           Explore by Pillar
         </h2>
 
-        {/* Responsive Grid: 1 col mobile, 2 col tablet, 3 col desktop, wrapping naturally */}
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
           {pillars.map((pillar) => (
             <Link
               key={pillar.title}
