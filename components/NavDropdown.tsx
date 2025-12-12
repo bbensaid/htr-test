@@ -13,12 +13,14 @@ interface NavDropdownProps {
   label: string;
   items: NavItem[];
   colorClass?: string;
+  icon?: React.ReactNode; // NEW: Accepts an icon component
 }
 
 const NavDropdown: React.FC<NavDropdownProps> = ({
   label,
   items,
   colorClass = "text-text-heading",
+  icon,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -36,18 +38,23 @@ const NavDropdown: React.FC<NavDropdownProps> = ({
 
   return (
     <div
-      className="relative group"
+      className="relative group h-full flex items-center"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      {/* TRIGGER BUTTON: Reduced padding from px-3 to px-1 to save horizontal space */}
+      {/* TRIGGER BUTTON */}
       <button
-        className={`flex items-center gap-0.5 px-1 py-2 text-sm font-extrabold uppercase tracking-wide transition-colors ${colorClass} hover:opacity-80`}
+        className={`flex items-center gap-1.5 px-2 py-1.5 text-sm font-extrabold uppercase tracking-wide transition-all duration-200 ${colorClass} hover:opacity-80`}
         aria-expanded={isOpen}
       >
+        {/* Render Icon if present */}
+        {icon && <span className="text-lg leading-none">{icon}</span>}
+
         {label}
+
+        {/* Chevron */}
         <svg
-          className={`w-3 h-3 transition-transform duration-200 ${
+          className={`w-3 h-3 transition-transform duration-200 opacity-60 ${
             isOpen ? "rotate-180" : ""
           }`}
           fill="none"
@@ -65,10 +72,12 @@ const NavDropdown: React.FC<NavDropdownProps> = ({
 
       {/* DROPDOWN MENU */}
       {isOpen && (
-        <div className="absolute left-0 mt-0 w-56 bg-white border border-ui-border rounded-lg shadow-xl z-50 animate-in fade-in zoom-in-95 duration-150">
+        <div className="absolute right-0 top-full mt-1 w-56 bg-white border border-ui-border rounded-lg shadow-xl z-50 animate-in fade-in zoom-in-95 duration-150">
+          {/* If the button has a background color, we use the text color for the top line */}
           <div
-            className={`h-1 w-full ${colorClass.replace("text-", "bg-")}`}
+            className={`h-1 w-full rounded-t-lg bg-current opacity-20`}
           ></div>
+
           <div className="py-2">
             {items.map((item) => (
               <Link
