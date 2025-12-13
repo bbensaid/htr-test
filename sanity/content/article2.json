@@ -11,6 +11,12 @@
   "summary": "Commercial insurance premiums in Vermont have more than doubled in six years, severing the link between local wages and healthcare costs. This hyper-inflation marks the end of the 'Commercial Cross-Subsidy' as a viable financial strategy for hospitals.",
   "body": [
     {
+      "_type": "audio",
+      "_key": "aud1",
+      "title": "Audio Briefing: The Premium Spike",
+      "summary": "A 2-minute overview of the decoupling between wages and insurance costs."
+    },
+    {
       "_type": "block",
       "_key": "intro1",
       "style": "normal",

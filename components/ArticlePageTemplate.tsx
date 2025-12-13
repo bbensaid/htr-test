@@ -7,13 +7,25 @@ import CommentsSection from "@/components/CommentsSection";
 import DefinitionToggle from "@/components/DefinitionToggle";
 
 // 1. DATA FETCHING
+// 1. DATA FETCHING (FIXED)
 async function getArticle(slug: string) {
   const query = `*[_type == "policyAnalysis" && slug.current == $slug][0] {
     title, summary, publishedAt, body, pillar,
     body[]{
       ...,
-      _type == "video" => { ..., videoFile { asset->{url} } },
-      _type == "audio" => { ..., audioFile { asset->{url} } },
+      // FIX: Changed 'videoFile' to 'url' or 'file' depending on your schema (usually 'url' for youtube)
+      _type == "video" => { ... }, 
+      
+      // FIX: Changed 'audioFile' to 'file' to match the actual schema field name
+      _type == "audio" => { 
+        ..., 
+        file { 
+          asset->{
+            url
+          } 
+        } 
+      },
+
       markDefs[]{
         ...,
         _type == "definition" => { ..., reference->{ term, description } }

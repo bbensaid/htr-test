@@ -32,7 +32,6 @@ const getThemeColors = (pillar: string) => {
 
 // --- 2. HELPER: Fetch Definitions for Tooltips ---
 async function fetchDefinitions() {
-  // Gracefully handle case where definitions might not exist yet
   try {
     return await client.fetch(`*[_type == "definition"]{term, description}`);
   } catch (err) {
@@ -55,14 +54,11 @@ const ArticleContent: React.FC<ArticleContentProps> = ({ body, pillar }) => {
   const renderTextWithTooltips = (text: string) => {
     if (!showTooltips || definitions.length === 0) return text;
 
-    // Escape special regex characters in terms to prevent crashes
     const safeTerms = definitions.map((d) =>
       d.term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
     );
 
-    // Create regex pattern
     const pattern = new RegExp(`\\b(${safeTerms.join("|")})\\b`, "g");
-
     const parts = text.split(pattern);
 
     return parts.map((part, i) => {
@@ -78,12 +74,16 @@ const ArticleContent: React.FC<ArticleContentProps> = ({ body, pillar }) => {
 
   // --- 4. RENDERERS ---
 
+  // *** FIXED AUDIO RENDERER ***
   const AudioRenderer = ({ value }: any) => {
-    if (!value.audioFile?.asset?.url) return null;
+    // Check both possible field names
+    const audioAsset = value.file?.asset || value.audioFile?.asset;
+    const audioUrl = audioAsset?.url;
+
     return (
       <figure className="my-10 p-6 bg-surface-muted border border-ui-border rounded-xl">
         <div className="flex items-center gap-4 mb-4">
-          <div className="w-12 h-12 bg-ui-primary rounded-full flex items-center justify-center text-white">
+          <div className="w-12 h-12 bg-ui-primary rounded-full flex items-center justify-center text-white shrink-0">
             <svg
               className="w-6 h-6 ml-1"
               fill="currentColor"
@@ -96,17 +96,28 @@ const ArticleContent: React.FC<ArticleContentProps> = ({ body, pillar }) => {
             <h4 className="text-lg font-bold text-text-heading leading-tight">
               {value.title || "Audio Segment"}
             </h4>
-            {value.duration && (
-              <span className="text-xs font-bold text-text-body uppercase tracking-wider">
-                {value.duration}
-              </span>
+            {value.summary && (
+              <p className="text-sm text-text-body mt-1">{value.summary}</p>
             )}
           </div>
         </div>
-        <audio controls className="w-full h-10 rounded">
-          <source src={value.audioFile.asset.url} type="audio/mpeg" />
-          Your browser does not support the audio element.
-        </audio>
+
+        {audioUrl ? (
+          <audio controls className="w-full h-10 rounded">
+            <source src={audioUrl} />
+            Your browser does not support the audio element.
+          </audio>
+        ) : (
+          // Fallback UI if file is missing (so you see SOMETHING)
+          <div className="w-full p-3 bg-gray-200 border border-dashed border-gray-400 rounded text-center">
+            <p className="text-xs text-red-600 font-bold uppercase">
+              Audio File Not Found
+            </p>
+            <p className="text-xs text-gray-600">
+              Please upload the audio file in Sanity Studio.
+            </p>
+          </div>
+        )}
       </figure>
     );
   };
@@ -217,7 +228,6 @@ const ArticleContent: React.FC<ArticleContentProps> = ({ body, pillar }) => {
       code: TableRenderer,
     },
 
-    // OVERRIDE NORMAL TEXT BLOCK TO USE AUTO-LINKER
     block: {
       normal: ({ children }: any) => {
         return (
@@ -292,8 +302,6 @@ const ArticleContent: React.FC<ArticleContentProps> = ({ body, pillar }) => {
       "highlight-science": ({ children }) => (
         <span className="text-card-science font-bold">{children}</span>
       ),
-
-      // Handle Manual Definition Marks (from Studio)
       definition: ({ value, children }: any) => {
         if (!value?.reference) return <span>{children}</span>;
         return (

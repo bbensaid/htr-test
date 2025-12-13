@@ -176,6 +176,22 @@ export default defineType({
             {name: 'language', type: 'string'},
           ],
         },
+        // Add this inside the 'body' array in policyAnalysis.ts
+        {
+          type: 'object',
+          name: 'audio',
+          title: 'Audio Player',
+          fields: [
+            {name: 'title', type: 'string', title: 'Audio Title'},
+            {name: 'summary', type: 'string', title: 'Summary'},
+            {
+              name: 'file',
+              type: 'file',
+              title: 'Audio File',
+              options: {accept: 'audio/*'},
+            },
+          ],
+        },
       ],
     }),
   ],
