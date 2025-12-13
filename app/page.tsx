@@ -40,10 +40,6 @@ const HomePage: React.FC = () => {
   return (
     <div className="flex flex-col lg:flex-row gap-8 mt-6">
       {/* --- SIDEBAR (25% Width) --- */}
-      {/* Kept on the left or right depending on preference, currently standard right-side or left-side layout. 
-          The previous layout had sidebar first on mobile (order-2) but usually sidebars are right or left. 
-          Let's stick to the previous code structure: Sidebar on Left (Desktop) as per previous iterations. 
-      */}
       <div className="order-2 lg:order-1 lg:w-1/4">
         <Sidebar />
       </div>
@@ -93,9 +89,19 @@ const HomePage: React.FC = () => {
               <h3 className="font-black text-slate-900 text-lg uppercase tracking-tight flex items-center gap-2">
                 <span className="text-2xl">📊</span> Visual Insight
               </h3>
-              <p className="text-sm text-slate-500 mt-1">
-                Data Source: HTR Proprietary Index • Q4 2025
-              </p>
+              <div className="flex items-center gap-2 mt-1">
+                <p className="text-sm text-slate-500">
+                  Data Source: HTR Proprietary Index • Q4 2025
+                </p>
+                <span className="text-slate-300">|</span>
+                {/* NEW LINK TO METHODOLOGY */}
+                <Link
+                  href="/htr-index"
+                  className="text-xs font-bold text-indigo-600 hover:underline"
+                >
+                  See Methodology
+                </Link>
+              </div>
             </div>
             <button className="hidden md:block px-3 py-1 bg-white border border-slate-300 rounded text-xs font-bold text-slate-600 hover:text-indigo-600 hover:border-indigo-600 transition-colors">
               Download Data
@@ -104,15 +110,20 @@ const HomePage: React.FC = () => {
 
           <div className="flex flex-col md:flex-row gap-8">
             {/* The Chart Visual (Placeholder) */}
-            <div className="w-full md:w-3/5 h-64 bg-white rounded border border-slate-200 shadow-sm flex items-center justify-center relative overflow-hidden group">
-              {/* Fake Bar Chart Visual */}
+            <div className="w-full md:w-3/5 h-64 bg-white rounded border border-slate-200 shadow-sm flex items-center justify-center relative overflow-hidden group cursor-pointer">
+              {/* Visual Only - clicking anywhere on the chart also leads to the index page */}
+              <Link
+                href="/htr-index"
+                className="absolute inset-0 z-10"
+                aria-label="View HTR Index"
+              ></Link>
+
               <div className="flex items-end gap-2 h-32 opacity-80">
                 <div className="w-4 h-12 bg-indigo-200"></div>
                 <div className="w-4 h-16 bg-indigo-300"></div>
                 <div className="w-4 h-24 bg-indigo-400"></div>
                 <div className="w-4 h-20 bg-indigo-300"></div>
                 <div className="w-4 h-32 bg-indigo-600 relative group-hover:scale-105 transition-transform">
-                  {/* Tooltip */}
                   <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
                     $4.2B (Peak)
                   </div>
@@ -135,11 +146,14 @@ const HomePage: React.FC = () => {
                 the third consecutive quarter. This "Jaw of Death" gap suggests
                 that labor inflation is now structural, not transitory.
               </p>
+
+              {/* UPDATED LINK: Points to /htr-index now */}
               <Link
-                href="/economics/market"
+                href="/htr-index"
                 className="text-sm font-bold text-indigo-600 hover:text-indigo-800 flex items-center gap-1"
               >
-                View Full Dataset <span className="text-lg">›</span>
+                View Methodology & Full Dataset{" "}
+                <span className="text-lg">›</span>
               </Link>
             </div>
           </div>

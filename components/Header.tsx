@@ -6,7 +6,7 @@ import Link from "next/link";
 import Logo from "./Logo";
 import NavDropdown from "./NavDropdown";
 
-// --- PILLARS ---
+// --- PILLARS (Now consolidated to the Trinity) ---
 const policyItems = [
   { href: "/policy/regulation", label: "Regulation & Legislation" },
   { href: "/policy/mandates", label: "Public Health Mandates" },
@@ -16,21 +16,16 @@ const policyItems = [
 const economicsItems = [
   { href: "/economics/value", label: "Value-Based Care Models" },
   { href: "/economics/market", label: "Market & Finance" },
-  { href: "/economics/cea", label: "Cost-Effectiveness Analysis" },
+  { href: "/economics/labor", label: "Labor & Workforce Strategy" }, // Moved from Ops
   { href: "/economics/investment", label: "Healthcare Investment Trends" },
 ];
 const technologyItems = [
   { href: "/technology/ai", label: "AI & Machine Learning" },
   { href: "/technology/digital", label: "Digital Health & Telemedicine" },
   { href: "/technology/security", label: "Data Security & Governance" },
-  { href: "/technology/iot", label: "Wearables & IOT" },
+  { href: "/technology/workflow", label: "Tech-Enabled Workflow" }, // Moved from Ops
 ];
-const operationsItems = [
-  { href: "/operations/workforce", label: "Workforce & Staffing" },
-  { href: "/operations/workflow", label: "Clinical Workflow" },
-  { href: "/operations/quality", label: "Quality & Safety" },
-  { href: "/operations/sites", label: "Alternative Sites (ASC/Home)" },
-];
+
 // --- SERVICES ---
 const advisoryItems = [
   { href: "/advisory/consulting", label: "Strategic Consulting" },
@@ -193,6 +188,7 @@ const Header: React.FC = () => {
               <Logo />
             </Link>
             <nav className="hidden xl:flex items-center space-x-1">
+              {/* TRINITY PILLARS */}
               <NavDropdown
                 label="POLICY"
                 items={policyItems}
@@ -207,11 +203,6 @@ const Header: React.FC = () => {
                 label="TECHNOLOGY"
                 items={technologyItems}
                 colorClass="text-card-tech"
-              />
-              <NavDropdown
-                label="OPERATIONS"
-                items={operationsItems}
-                colorClass="text-card-operations"
               />
             </nav>
           </div>
@@ -243,15 +234,12 @@ const Header: React.FC = () => {
           {/* RIGHT: Services */}
           <div className="flex items-center gap-2 flex-shrink-0 w-full xl:w-auto justify-end">
             <nav className="hidden md:flex items-center space-x-2">
-              {/* === HTR ACADEMY (The Premium Pill) === */}
-              {/* Uses Royal Indigo colors + Icon + Border to pop */}
               <NavDropdown
                 label="HTR ACADEMY"
                 items={academyItems}
                 icon={<GradCapIcon />}
                 colorClass="text-indigo-700 bg-indigo-50 border border-indigo-200 rounded-md hover:bg-indigo-100 hover:border-indigo-300"
               />
-
               <NavDropdown label="ADVISORY" items={advisoryItems} />
             </nav>
           </div>
