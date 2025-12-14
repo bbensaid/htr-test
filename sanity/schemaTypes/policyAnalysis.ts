@@ -45,6 +45,15 @@ export default defineType({
     }),
 
     defineField({
+      name: 'category',
+      title: 'Category Slug',
+      description: 'Must match the URL slug in the Navbar exactly (e.g. "workflow", "ai", "value")',
+      type: 'string',
+      group: 'meta',
+      validation: (rule) => rule.required(),
+    }),
+
+    defineField({
       name: 'status',
       title: 'Status',
       type: 'string',

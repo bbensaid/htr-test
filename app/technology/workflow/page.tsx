@@ -2,9 +2,8 @@ import React from "react";
 import Link from "next/link";
 import { client } from "@/lib/sanity";
 
-// QUERY: category == "digital"
-async function getDigitalArticles() {
-  const query = `*[_type == "policyAnalysis" && pillar == "Technology" && category == "digital"] | order(publishedAt desc) {
+async function getWorkflowArticles() {
+  const query = `*[_type == "policyAnalysis" && pillar == "Technology" && category == "workflow"] | order(publishedAt desc) {
     _id,
     title,
     summary,
@@ -17,8 +16,8 @@ async function getDigitalArticles() {
   return client.fetch(query, {}, { next: { revalidate: 0 } });
 }
 
-export default async function DigitalHealthPage() {
-  const articles = await getDigitalArticles();
+export default async function WorkflowPage() {
+  const articles = await getWorkflowArticles();
 
   return (
     <div className="py-16 px-4 md:px-8 max-w-7xl mx-auto">
@@ -27,11 +26,11 @@ export default async function DigitalHealthPage() {
           Technology Pillar
         </span>
         <h1 className="text-4xl md:text-5xl font-extrabold text-text-heading mb-6">
-          Digital Health & Telemedicine
+          Tech-Enabled Workflow
         </h1>
         <p className="text-xl text-text-body leading-relaxed max-w-4xl">
-          Coverage of remote patient monitoring, hospital-at-home models, and
-          the infrastructure of virtual care.
+          Intelligence on how AI and automation are reshaping clinical
+          operations and liability.
         </p>
       </div>
 
@@ -40,7 +39,8 @@ export default async function DigitalHealthPage() {
           <div className="p-10 text-center bg-surface-muted rounded-xl border border-ui-border">
             <p className="text-text-body mb-4">No analysis available yet.</p>
             <p className="text-sm text-text-body/60">
-              Run the script with category: "digital" to populate this list.
+              Run the script with pillar: "Technology" and category: "workflow"
+              to populate this list.
             </p>
           </div>
         )}
@@ -71,8 +71,9 @@ export default async function DigitalHealthPage() {
               </div>
 
               <div className="flex-shrink-0 flex flex-col items-end justify-center gap-2">
+                {/* CORRECTED LINK: Points to /technology/analysis/slug */}
                 <Link
-                  href={`/articles/${article.slug.current}`}
+                  href={`/technology/analysis/${article.slug.current}`}
                   className="text-sm font-bold text-card-tech hover:underline mt-2 block"
                 >
                   Read Analysis &rarr;
