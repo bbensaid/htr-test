@@ -1,320 +1,236 @@
-// components/ArticleContent.tsx
-"use client";
+import React from "react";
+import { PortableText } from "@portabletext/react";
+import Link from "next/link";
 
-import React, { useEffect, useState } from "react";
-import { PortableText, PortableTextComponents } from "@portabletext/react";
-import { urlFor, client } from "@/lib/sanity";
-import VideoPlayer from "./VideoPlayer";
-import Image from "next/image";
-import SmartTooltip from "./SmartTooltip";
-import { useTooltipContext } from "./TooltipContext";
-
-interface ArticleContentProps {
-  body: any;
-  pillar: string;
-}
-
-// --- 1. HELPER: Get Colors based on Pillar (RESTORED) ---
-const getThemeColors = (pillar: string) => {
-  const normalized = pillar?.toLowerCase() || "";
-  if (normalized === "policy")
-    return { border: "border-card-policy", text: "text-card-policy" };
-  if (normalized === "economics")
-    return { border: "border-card-economics", text: "text-card-economics" };
-  if (normalized === "technology")
-    return { border: "border-card-tech", text: "text-card-tech" };
-  if (normalized === "operations")
-    return { border: "border-card-operations", text: "text-card-operations" };
-  if (normalized === "science")
-    return { border: "border-card-science", text: "text-card-science" };
-  return { border: "border-ui-primary", text: "text-ui-primary" };
+// 1. Helper to extract YouTube ID
+const getYouTubeId = (url: string) => {
+  if (!url) return null;
+  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+  const match = url.match(regExp);
+  return match && match[2].length === 11 ? match[2] : null;
 };
 
-// --- 2. HELPER: Fetch Definitions for Tooltips ---
-async function fetchDefinitions() {
-  try {
-    return await client.fetch(`*[_type == "definition"]{term, description}`);
-  } catch (err) {
-    console.error("Failed to fetch definitions", err);
-    return [];
+// 2. The Video Component (Handles BOTH Uploads and YouTube)
+const VideoBlock = ({ value }: { value: any }) => {
+  const { url, caption, videoFile } = value;
+
+  // A. Check for Uploaded File (Sanity File)
+  const uploadedUrl = videoFile?.asset?.url;
+
+  // B. Check for YouTube ID
+  const youtubeId = url ? getYouTubeId(url) : null;
+
+  return (
+    <div className="my-8">
+      <div
+        className="relative w-full overflow-hidden rounded-xl shadow-lg bg-gray-900"
+        style={{ paddingTop: "56.25%" }}
+      >
+        {/* Priority 1: Uploaded Video File */}
+        {uploadedUrl ? (
+          <video
+            src={uploadedUrl}
+            controls
+            className="absolute top-0 left-0 w-full h-full object-cover"
+          />
+        ) : youtubeId ? (
+          /* Priority 2: YouTube Embed */
+          <iframe
+            src={`https://www.youtube.com/embed/${youtubeId}`}
+            title={caption || "Video player"}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+            className="absolute top-0 left-0 w-full h-full border-0"
+          />
+        ) : (
+          /* Fallback: No Source */
+          <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center text-white bg-gray-800">
+            <p className="text-sm">No Video Source Found</p>
+          </div>
+        )}
+      </div>
+      {caption && (
+        <p className="mt-2 text-sm text-center text-gray-500 italic">
+          {caption}
+        </p>
+      )}
+    </div>
+  );
+};
+
+// 3. The Audio Component
+const AudioBlock = ({ value }: { value: any }) => {
+  const audioUrl = value.file?.asset?.url;
+
+  if (!audioUrl) {
+    return (
+      <div className="p-4 bg-red-50 text-red-600 rounded border border-red-100 text-sm">
+        Audio file not found. Check GROQ query:{" "}
+        <code>file &#123; asset-&gt;&#123;url&#125; &#125;</code>
+      </div>
+    );
   }
-}
 
-const ArticleContent: React.FC<ArticleContentProps> = ({ body, pillar }) => {
-  const theme = getThemeColors(pillar);
-  const { showTooltips } = useTooltipContext();
-  const [definitions, setDefinitions] = useState<any[]>([]);
-
-  // Load glossary on mount
-  useEffect(() => {
-    fetchDefinitions().then(setDefinitions);
-  }, []);
-
-  // --- 3. AUTO-LINKER LOGIC ---
-  const renderTextWithTooltips = (text: string) => {
-    if (!showTooltips || definitions.length === 0) return text;
-
-    const safeTerms = definitions.map((d) =>
-      d.term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
-    );
-
-    const pattern = new RegExp(`\\b(${safeTerms.join("|")})\\b`, "g");
-    const parts = text.split(pattern);
-
-    return parts.map((part, i) => {
-      const def = definitions.find((d) => d.term === part);
-      if (def) {
-        return (
-          <SmartTooltip key={i} term={part} definition={def.description} />
-        );
-      }
-      return part;
-    });
-  };
-
-  // --- 4. RENDERERS ---
-
-  // *** FIXED AUDIO RENDERER ***
-  const AudioRenderer = ({ value }: any) => {
-    // Check both possible field names
-    const audioAsset = value.file?.asset || value.audioFile?.asset;
-    const audioUrl = audioAsset?.url;
-
-    return (
-      <figure className="my-10 p-6 bg-surface-muted border border-ui-border rounded-xl">
-        <div className="flex items-center gap-4 mb-4">
-          <div className="w-12 h-12 bg-ui-primary rounded-full flex items-center justify-center text-white shrink-0">
-            <svg
-              className="w-6 h-6 ml-1"
-              fill="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path d="M8 5v14l11-7z" />
-            </svg>
-          </div>
-          <div>
-            <h4 className="text-lg font-bold text-text-heading leading-tight">
-              {value.title || "Audio Segment"}
-            </h4>
-            {value.summary && (
-              <p className="text-sm text-text-body mt-1">{value.summary}</p>
-            )}
-          </div>
-        </div>
-
-        {audioUrl ? (
-          <audio controls className="w-full h-10 rounded">
-            <source src={audioUrl} />
-            Your browser does not support the audio element.
-          </audio>
-        ) : (
-          // Fallback UI if file is missing (so you see SOMETHING)
-          <div className="w-full p-3 bg-gray-200 border border-dashed border-gray-400 rounded text-center">
-            <p className="text-xs text-red-600 font-bold uppercase">
-              Audio File Not Found
-            </p>
-            <p className="text-xs text-gray-600">
-              Please upload the audio file in Sanity Studio.
-            </p>
-          </div>
-        )}
-      </figure>
-    );
-  };
-
-  const TableRenderer = ({ value }: any) => {
-    try {
-      const data = JSON.parse(value.code);
-      if (Array.isArray(data) && data.length > 0) {
-        const headers = Object.keys(data[0]);
-        return (
-          <div className="my-10 overflow-hidden rounded-xl border border-ui-border shadow-sm overflow-x-auto">
-            <div
-              className={`h-1 w-full`}
-              style={{
-                backgroundColor: `var(--color-${
-                  pillar.toLowerCase() === "technology"
-                    ? "card-tech"
-                    : "card-" + pillar.toLowerCase()
-                })`,
-              }}
-            ></div>
-            <table className="min-w-full divide-y divide-ui-border">
-              <thead className="bg-surface-muted">
-                <tr>
-                  {headers.map((header) => (
-                    <th
-                      key={header}
-                      className="px-6 py-4 text-left text-xs font-bold text-text-heading uppercase tracking-wider"
-                    >
-                      {header}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody className="bg-surface divide-y divide-ui-border">
-                {data.map((row: any, idx: number) => (
-                  <tr
-                    key={idx}
-                    className="hover:bg-surface-muted/50 transition"
-                  >
-                    {headers.map((header) => (
-                      <td
-                        key={header}
-                        className="px-6 py-4 text-sm text-text-body leading-relaxed align-top"
-                      >
-                        {row[header]}
-                      </td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        );
-      }
-      return (
-        <pre className="bg-surface-muted p-4 rounded border border-ui-border overflow-x-auto text-sm">
-          {value.code}
-        </pre>
-      );
-    } catch (e) {
-      return (
-        <pre className="bg-surface-muted p-4 rounded border border-ui-border overflow-x-auto text-sm">
-          {value.code}
-        </pre>
-      );
-    }
-  };
-
-  const ImageRenderer = ({ value }: any) => {
-    const imageUrl = value.asset ? urlFor(value).url() : null;
-    return (
-      <figure className="my-12">
-        {imageUrl ? (
-          <div className="relative w-full aspect-video rounded-xl overflow-hidden shadow-md">
-            <img
-              src={imageUrl}
-              alt={value.alt || "Article Image"}
-              className="object-cover w-full h-full"
+  return (
+    <div className="my-8 p-6 bg-gray-50 rounded-xl border border-gray-200">
+      <div className="flex items-center gap-4 mb-4">
+        <div className="w-10 h-10 bg-indigo-600 rounded-full flex items-center justify-center flex-shrink-0">
+          <svg
+            className="w-5 h-5 text-white"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"
             />
-          </div>
-        ) : (
-          <div className="w-full aspect-video bg-surface-muted border-2 border-dashed border-ui-border rounded-xl flex flex-col items-center justify-center text-center p-6">
-            <span className="text-4xl mb-2">📷</span>
-            <p className="text-sm font-bold text-text-body uppercase">
-              Image Placeholder
-            </p>
-            <p className="text-xs text-text-body mt-1 italic max-w-md">
-              {value.caption}
-            </p>
-          </div>
-        )}
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
+        </div>
+        <div>
+          <h4 className="font-bold text-gray-900 leading-tight">
+            {value.title || "Audio Briefing"}
+          </h4>
+          <p className="text-xs text-gray-500 uppercase tracking-wide">
+            Listen to Summary
+          </p>
+        </div>
+      </div>
+      <audio controls src={audioUrl} className="w-full" />
+      {value.summary && (
+        <p className="mt-3 text-sm text-gray-600">{value.summary}</p>
+      )}
+    </div>
+  );
+};
+
+// 4. The Table Component
+const TableBlock = ({ value }: { value: any }) => {
+  let data = [];
+  try {
+    data = JSON.parse(value.code);
+  } catch (e) {
+    return (
+      <pre className="bg-gray-100 p-4 rounded text-xs overflow-x-auto">
+        {value.code}
+      </pre>
+    );
+  }
+
+  if (!Array.isArray(data) || data.length === 0) return null;
+  const headers = Object.keys(data[0]);
+
+  return (
+    <div className="my-8 overflow-x-auto rounded-lg border border-gray-200 shadow-sm">
+      <table className="w-full text-sm text-left">
+        <thead className="bg-gray-50 text-gray-700 uppercase text-xs font-bold border-b border-gray-200">
+          <tr>
+            {headers.map((header) => (
+              <th key={header} className="px-6 py-3 whitespace-nowrap">
+                {header}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-gray-100 bg-white">
+          {data.map((row: any, i: number) => (
+            <tr key={i} className="hover:bg-gray-50 transition-colors">
+              {headers.map((header) => (
+                <td
+                  key={header}
+                  className="px-6 py-4 font-medium text-gray-900"
+                >
+                  {row[header]}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+};
+
+// --- MAIN EXPORT ---
+
+const components = {
+  types: {
+    video: VideoBlock,
+    audio: AudioBlock,
+    code: TableBlock,
+    image: ({ value }: any) => (
+      <figure className="my-8">
+        <img
+          src={value.asset?.url}
+          alt={value.alt || "Article Image"}
+          className="w-full rounded-xl shadow-md"
+        />
         {value.caption && (
-          <figcaption className="text-center text-sm text-text-body mt-3 italic">
+          <figcaption className="mt-2 text-center text-sm text-gray-500">
             {value.caption}
           </figcaption>
         )}
       </figure>
-    );
-  };
-
-  // --- 5. COMPONENTS CONFIGURATION ---
-  const ptComponents: PortableTextComponents = {
-    types: {
-      audio: AudioRenderer,
-      video: VideoPlayer,
-      image: ImageRenderer,
-      code: TableRenderer,
+    ),
+  },
+  block: {
+    h2: ({ children }: any) => (
+      <h2 className="text-2xl font-bold mt-12 mb-6 text-gray-900">
+        {children}
+      </h2>
+    ),
+    h3: ({ children }: any) => (
+      <h3 className="text-xl font-bold mt-8 mb-4 text-gray-800">{children}</h3>
+    ),
+    normal: ({ children }: any) => (
+      <p className="mb-6 text-lg leading-relaxed text-gray-700">{children}</p>
+    ),
+    blockquote: ({ children }: any) => {
+      return (
+        <blockquote className="border-l-4 border-indigo-500 pl-6 py-2 my-8 italic text-xl text-gray-800 bg-gray-50 rounded-r-lg">
+          {children}
+        </blockquote>
+      );
     },
-
-    block: {
-      normal: ({ children }: any) => {
-        return (
-          <p className="text-text-body text-lg leading-relaxed mb-6">
-            {React.Children.map(children, (child) => {
-              if (typeof child === "string") {
-                return renderTextWithTooltips(child);
-              }
-              return child;
-            })}
-          </p>
-        );
-      },
-      h2: ({ children }) => (
-        <h2
-          className={`text-3xl font-bold text-text-heading mt-12 mb-6 border-l-4 ${theme.border} pl-4`}
-        >
-          {children}
-        </h2>
-      ),
-      h3: ({ children }) => (
-        <h3 className="text-2xl font-bold text-text-heading mt-8 mb-4">
-          {children}
-        </h3>
-      ),
-      blockquote: ({ children }) => (
-        <div
-          className={`bg-surface-muted p-8 rounded-xl border-l-4 ${theme.border} my-8 shadow-sm`}
-        >
-          <p className="text-xl italic font-medium text-text-heading">
-            {children}
-          </p>
-        </div>
-      ),
-    },
-    list: {
-      bullet: ({ children }) => (
-        <ul className="list-disc pl-6 space-y-3 mb-6 text-text-body text-lg">
-          {children}
-        </ul>
-      ),
-      number: ({ children }) => (
-        <ol className="list-decimal pl-6 space-y-3 mb-6 text-text-body text-lg">
-          {children}
-        </ol>
-      ),
-    },
-    marks: {
-      strong: ({ children }) => (
-        <strong className="font-bold text-text-heading">{children}</strong>
-      ),
-      link: ({ value, children }) => (
-        <a
-          href={value?.href}
-          className={`${theme.text} underline hover:opacity-80 transition font-semibold`}
-        >
-          {children}
-        </a>
-      ),
-      "highlight-policy": ({ children }) => (
-        <span className="text-card-policy font-bold">{children}</span>
-      ),
-      "highlight-economics": ({ children }) => (
-        <span className="text-card-economics font-bold">{children}</span>
-      ),
-      "highlight-tech": ({ children }) => (
-        <span className="text-card-tech font-bold">{children}</span>
-      ),
-      "highlight-operations": ({ children }) => (
-        <span className="text-card-operations font-bold">{children}</span>
-      ),
-      "highlight-science": ({ children }) => (
-        <span className="text-card-science font-bold">{children}</span>
-      ),
-      definition: ({ value, children }: any) => {
-        if (!value?.reference) return <span>{children}</span>;
-        return (
-          <SmartTooltip
-            term={children}
-            definition={value.reference.description}
-          />
-        );
-      },
-    },
-  };
-
-  return <PortableText value={body} components={ptComponents} />;
+  },
+  marks: {
+    strong: ({ children }: any) => (
+      <strong className="font-bold text-gray-900">{children}</strong>
+    ),
+    link: ({ children, value }: any) => (
+      <Link
+        href={value.href}
+        className="text-indigo-600 hover:underline decoration-2 underline-offset-2"
+      >
+        {children}
+      </Link>
+    ),
+    "highlight-policy": ({ children }: any) => (
+      <span className="bg-orange-100 text-orange-800 px-1 rounded">
+        {children}
+      </span>
+    ),
+    "highlight-economics": ({ children }: any) => (
+      <span className="bg-green-100 text-green-800 px-1 rounded">
+        {children}
+      </span>
+    ),
+    "highlight-tech": ({ children }: any) => (
+      <span className="bg-indigo-100 text-indigo-800 px-1 rounded">
+        {children}
+      </span>
+    ),
+  },
 };
 
-export default ArticleContent;
+export default function ArticleContent({ body }: { body: any }) {
+  return <PortableText value={body} components={components} />;
+}

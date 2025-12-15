@@ -1,109 +1,136 @@
-// components/ArticlePageTemplate.tsx
-
 import React from "react";
+import Link from "next/link";
 import { client } from "@/lib/sanity";
-import ArticleContent from "@/components/ArticleContent";
-import CommentsSection from "@/components/CommentsSection";
-import DefinitionToggle from "@/components/DefinitionToggle";
+import ArticleContent from "./ArticleContent";
 
-// 1. DATA FETCHING
-// 1. DATA FETCHING (FIXED)
-async function getArticle(slug: string) {
-  const query = `*[_type == "policyAnalysis" && slug.current == $slug][0] {
-    title, summary, publishedAt, body, pillar,
-    body[]{
-      ...,
-      // FIX: Changed 'videoFile' to 'url' or 'file' depending on your schema (usually 'url' for youtube)
-      _type == "video" => { ... }, 
-      
-      // FIX: Changed 'audioFile' to 'file' to match the actual schema field name
-      _type == "audio" => { 
-        ..., 
-        file { 
-          asset->{
-            url
-          } 
-        } 
-      },
+// Helper to style based on Pillar
+const getTheme = (pillar: string) => {
+  switch (pillar) {
+    case "Economics":
+      return { badge: "bg-green-100 text-green-800", text: "text-green-800" };
+    case "Policy":
+      return {
+        badge: "bg-orange-100 text-orange-800",
+        text: "text-orange-800",
+      };
+    case "Technology":
+      return {
+        badge: "bg-indigo-100 text-indigo-800",
+        text: "text-indigo-800",
+      };
+    default:
+      return { badge: "bg-gray-100 text-gray-800", text: "text-gray-800" };
+  }
+};
 
-      markDefs[]{
-        ...,
-        _type == "definition" => { ..., reference->{ term, description } }
-      }
-    }
-  }`;
-  return client.fetch(query, { slug }, { next: { revalidate: 0 } });
-}
-
-// 2. THE MASTER LAYOUT
 export default async function ArticlePageTemplate({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const article = await getArticle(id);
 
-  if (!article)
-    return <div className="p-20 text-center">Article not found.</div>;
+  // --- THE QUERY (UPDATED) ---
+  // We explicitly expand the videoFile and audio file assets here.
+  const query = `*[_type == "policyAnalysis" && slug.current == $slug][0]{
+    title,
+    summary,
+    publishedAt,
+    pillar,
+    status,
+    impactLevel,
+    // EXPANDED BODY QUERY FOR MEDIA
+    body[]{
+      ...,
+      _type == "video" => {
+        ...,
+        videoFile { asset->{url} }
+      },
+      _type == "audio" => {
+        ...,
+        file { asset->{url} }
+      },
+      _type == "image" => {
+        ...,
+        asset->{url}
+      }
+    }
+  }`;
 
-  const getBadgeColor = (pillar: string) => {
-    const p = pillar?.toLowerCase() || "";
-    if (p === "policy") return "bg-orange-100 text-orange-800";
-    if (p === "economics") return "bg-green-100 text-green-800";
-    if (p === "technology") return "bg-indigo-100 text-indigo-800";
-    if (p === "operations") return "bg-rose-100 text-rose-800";
-    if (p === "science") return "bg-teal-100 text-teal-800";
-    return "bg-gray-100 text-gray-800";
-  };
+  const article = await client.fetch(
+    query,
+    { slug: id },
+    { next: { revalidate: 0 } }
+  );
+
+  if (!article) {
+    return (
+      <div className="max-w-3xl mx-auto py-20 px-8 text-center">
+        <h1 className="text-3xl font-bold text-gray-900">Article Not Found</h1>
+        <p className="mt-2 text-gray-600">
+          The requested analysis could not be retrieved.
+        </p>
+        <Link
+          href="/"
+          className="mt-6 inline-block text-indigo-600 hover:underline"
+        >
+          &larr; Return Home
+        </Link>
+      </div>
+    );
+  }
+
+  const theme = getTheme(article.pillar);
 
   return (
-    <div className="py-16 px-4 md:px-8 max-w-7xl mx-auto">
-      {/* Header Container */}
-      <div className="max-w-4xl mx-auto text-center mb-16 border-b border-ui-border pb-12 relative">
-        {/* METADATA ROW (Split Layout) */}
-        {/* 'relative' allows us to pin Left and Right items absolutely on Desktop */}
-        <div className="relative w-full flex flex-col md:flex-row items-center justify-center mb-8 min-h-[32px]">
-          {/* LEFT: Pillar Badge */}
-          <div className="mb-4 md:mb-0 md:absolute md:left-0 md:top-1/2 md:-translate-y-1/2">
+    <article className="max-w-4xl mx-auto py-16 px-4 md:px-8">
+      {/* HEADER */}
+      <header className="mb-12 border-b border-gray-200 pb-10">
+        <div className="flex items-center gap-3 mb-6">
+          {article.pillar && (
             <span
-              className={`px-3 py-1 text-xs font-bold uppercase tracking-wider rounded-full ${getBadgeColor(
-                article.pillar
-              )}`}
+              className={`px-3 py-1 rounded text-xs font-bold uppercase tracking-wide ${theme.badge}`}
             >
               {article.pillar}
             </span>
-          </div>
-
-          {/* CENTER: Date (The Data) */}
-          <span className="px-3 py-1 bg-surface-muted text-text-body text-xs font-bold uppercase tracking-wider rounded-full border border-ui-border">
-            {new Date(article.publishedAt).toLocaleDateString()}
+          )}
+          <span className="text-gray-500 text-sm font-medium">
+            {new Date(article.publishedAt).toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })}
           </span>
-
-          {/* RIGHT: Definition Toggle */}
-          <div className="mt-4 md:mt-0 md:absolute md:right-0 md:top-1/2 md:-translate-y-1/2">
-            <DefinitionToggle />
-          </div>
+          {article.status && (
+            <span className="ml-auto text-xs font-mono text-gray-400 border border-gray-200 px-2 py-0.5 rounded">
+              {article.status}
+            </span>
+          )}
         </div>
 
-        <h1 className="text-4xl md:text-6xl font-extrabold text-text-heading mb-6 leading-tight">
+        <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-gray-900 mb-6 leading-tight">
           {article.title}
         </h1>
-        <p className="text-xl text-text-body leading-relaxed mb-4 max-w-3xl mx-auto">
+
+        <p className="text-xl md:text-2xl text-gray-600 leading-relaxed max-w-3xl">
           {article.summary}
         </p>
+      </header>
+
+      {/* BODY CONTENT */}
+      <div className="prose prose-lg prose-indigo max-w-none">
+        <ArticleContent body={article.body} />
       </div>
 
-      {/* Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-        <div className="lg:col-span-8 lg:col-start-3">
-          <div className="prose prose-lg max-w-none">
-            <ArticleContent body={article.body} pillar={article.pillar} />
-          </div>
-          <hr className="my-12 border-ui-border" />
-          <CommentsSection />
-        </div>
+      {/* FOOTER NAV */}
+      <div className="mt-20 pt-10 border-t border-gray-200">
+        <Link
+          href="/"
+          className="text-gray-500 hover:text-indigo-600 font-bold flex items-center gap-2"
+        >
+          &larr; Back to Intelligence Feed
+        </Link>
       </div>
-    </div>
+    </article>
   );
 }

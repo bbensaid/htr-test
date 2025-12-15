@@ -1,204 +1,145 @@
-// sanity/schemaTypes/policyAnalysis.ts
-
 import {defineField, defineType} from 'sanity'
 
 export default defineType({
   name: 'policyAnalysis',
   title: 'Policy Analysis',
   type: 'document',
-  groups: [
-    {name: 'meta', title: 'Metadata'},
-    {name: 'content', title: 'Content'},
-  ],
   fields: [
     defineField({
       name: 'title',
       title: 'Title',
       type: 'string',
-      group: 'content',
-      validation: (rule) => rule.required(),
+      validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: 'slug',
       title: 'Slug',
       type: 'slug',
-      group: 'meta',
-      options: {source: 'title'},
-      validation: (rule) => rule.required(),
+      options: {
+        source: 'title',
+        maxLength: 96,
+      },
+      validation: (Rule) => Rule.required(),
     }),
-
-    // --- UPDATED PILLAR LIST (5 PILLARS) ---
     defineField({
       name: 'pillar',
       title: 'Pillar',
       type: 'string',
-      group: 'meta',
       options: {
         list: [
-          {title: 'Policy (Orange)', value: 'Policy'},
-          {title: 'Economics (Green)', value: 'Economics'},
-          {title: 'Technology (Indigo)', value: 'Technology'},
-          {title: 'Operations (Rose)', value: 'Operations'}, // NEW
-          {title: 'Science (Teal)', value: 'Science'}, // NEW
+          {title: 'Policy', value: 'Policy'},
+          {title: 'Economics', value: 'Economics'},
+          {title: 'Technology', value: 'Technology'},
         ],
       },
+      validation: (Rule) => Rule.required(),
     }),
-
     defineField({
       name: 'category',
-      title: 'Category Slug',
-      description: 'Must match the URL slug in the Navbar exactly (e.g. "workflow", "ai", "value")',
+      title: 'Category (Menu Slug)',
+      description: 'Must match a folder name (e.g. workflow, ai, market)',
       type: 'string',
-      group: 'meta',
-      validation: (rule) => rule.required(),
+      validation: (Rule) => Rule.required(),
     }),
-
     defineField({
       name: 'status',
       title: 'Status',
       type: 'string',
-      group: 'meta',
       options: {
-        list: [
-          {title: 'Active', value: 'Active'},
-          {title: 'Proposed', value: 'Proposed'},
-          {title: 'In Committee', value: 'In Committee'},
-        ],
+        list: ['Active', 'Proposed', 'In Committee'],
       },
     }),
     defineField({
       name: 'impactLevel',
       title: 'Impact Level',
       type: 'string',
-      group: 'meta',
       options: {
-        list: [
-          {title: 'Critical', value: 'Critical'},
-          {title: 'High', value: 'High'},
-          {title: 'Medium', value: 'Medium'},
-        ],
+        list: ['Critical', 'High', 'Medium'],
       },
+    }),
+    defineField({
+      name: 'publishedAt',
+      title: 'Published at',
+      type: 'datetime',
     }),
     defineField({
       name: 'summary',
       title: 'Summary',
       type: 'text',
-      rows: 3,
-      group: 'content',
-    }),
-    defineField({
-      name: 'publishedAt',
-      title: 'Published At',
-      type: 'datetime',
-      group: 'meta',
+      validation: (Rule) => Rule.required(),
     }),
 
-    // --- BODY FIELD (Updated with New Colors) ---
+    // --- THE BODY BLOCK (FIXED) ---
     defineField({
       name: 'body',
-      title: 'Body',
+      title: 'Body Content',
       type: 'array',
-      group: 'content',
       of: [
-        // 1. Text Block
-        {
-          type: 'block',
-          styles: [
-            {title: 'Normal', value: 'normal'},
-            {title: 'Heading 2', value: 'h2'},
-            {title: 'Heading 3', value: 'h3'},
-            {title: 'Quote', value: 'blockquote'},
-          ],
-          marks: {
-            decorators: [
-              {title: 'Strong', value: 'strong'},
-              {title: 'Emphasis', value: 'em'},
-              {title: 'Policy Orange', value: 'highlight-policy'},
-              {title: 'Econ Green', value: 'highlight-economics'},
-              {title: 'Tech Indigo', value: 'highlight-tech'},
-            ],
-            // NEW: ANNOTATIONS (Links & Tooltips)
-            annotations: [
-              {
-                name: 'link',
-                type: 'object',
-                title: 'External Link',
-                fields: [
-                  {
-                    name: 'href',
-                    type: 'url',
-                    title: 'URL',
-                  },
-                ],
-              },
-              {
-                name: 'definition',
-                type: 'object',
-                title: 'Define Term',
-                fields: [
-                  {
-                    name: 'reference',
-                    type: 'reference',
-                    to: [{type: 'definition'}], // Links to the schema we just made
-                  },
-                ],
-              },
-            ],
-          },
-        },
+        {type: 'block'}, // Standard text
 
-        // 2. Video Block
-        {
-          type: 'object',
-          name: 'video',
-          title: 'Video Player',
-          fields: [
-            {name: 'url', type: 'url', title: 'YouTube/Vimeo URL'},
-            {
-              name: 'videoFile',
-              type: 'file',
-              title: 'Upload Video File',
-              options: {accept: 'video/*'},
-            },
-            {name: 'caption', type: 'string', title: 'Caption'},
-          ],
-        },
-
-        // 3. Image Block
+        // IMAGE BLOCK
         {
           type: 'image',
-          title: 'Chart / Image',
-          options: {hotspot: true},
           fields: [
             {name: 'caption', type: 'string', title: 'Caption'},
             {name: 'alt', type: 'string', title: 'Alt Text'},
           ],
         },
 
-        // 4. Code/Table Block
+        // DATA TABLE BLOCK
         {
-          type: 'object',
-          name: 'code',
-          title: 'Data Table',
-          fields: [
-            {name: 'code', type: 'text'},
-            {name: 'language', type: 'string'},
-          ],
+          type: 'code',
+          title: 'Data Table (JSON)',
+          options: {language: 'json'},
         },
-        // Add this inside the 'body' array in policyAnalysis.ts
+
+        // --- VIDEO BLOCK (HYBRID: URL + UPLOAD) ---
         {
+          name: 'video',
+          title: 'Video Player',
           type: 'object',
+          fields: [
+            {
+              name: 'url',
+              type: 'url',
+              title: 'YouTube URL',
+              description: 'Paste a YouTube link here...',
+            },
+            {
+              name: 'videoFile',
+              type: 'file',
+              title: 'OR Upload Video File',
+              description: 'Drag and drop an MP4 here (overrides URL)',
+              options: {accept: 'video/*'},
+            },
+            {name: 'caption', type: 'string', title: 'Caption'},
+          ],
+          // THIS PREVIEW OBJECT IS WHAT WAS MISSING
+          preview: {
+            select: {
+              title: 'caption',
+              subtitle: 'url',
+              media: 'videoFile',
+            },
+            prepare({title, subtitle, media}) {
+              return {
+                title: title || 'Video Block',
+                subtitle: subtitle || 'Uploaded Video or YouTube',
+                media: media, // Shows thumbnail if uploaded
+              }
+            },
+          },
+        },
+
+        // AUDIO BLOCK
+        {
           name: 'audio',
           title: 'Audio Player',
+          type: 'object',
           fields: [
-            {name: 'title', type: 'string', title: 'Audio Title'},
+            {name: 'file', type: 'file', title: 'Audio File'},
+            {name: 'title', type: 'string', title: 'Title'},
             {name: 'summary', type: 'string', title: 'Summary'},
-            {
-              name: 'file',
-              type: 'file',
-              title: 'Audio File',
-              options: {accept: 'audio/*'},
-            },
           ],
         },
       ],
