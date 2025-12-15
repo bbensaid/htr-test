@@ -16,7 +16,7 @@ const policyItems = [
 const economicsItems = [
   { href: "/economics/value", label: "Value-Based Care Models" },
   { href: "/economics/market", label: "Market & Finance" },
-  { href: "/economics/labor", label: "Labor & Workforce Strategy" }, // Moved from Ops
+  { href: "/economics/cea", label: "Labor & Workforce Strategy" }, // Moved from Ops
   { href: "/economics/investment", label: "Healthcare Investment Trends" },
 ];
 const technologyItems = [

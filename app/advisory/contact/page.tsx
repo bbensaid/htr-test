@@ -1,129 +1,61 @@
-// app/advisory/contact/page.tsx
-"use client";
+import React from "react";
+import StaticPageLayout from "@/components/StaticPageLayout";
 
-import React, { useState } from "react";
-
-const ContactPage: React.FC = () => {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    organization: "",
-    interest: "Strategic Consulting",
-    message: "",
-  });
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    alert("Request submitted. (This is a demo action)");
-  };
-
+export default function ContactPage() {
   return (
-    <div className="py-16 px-4 md:px-8 max-w-4xl mx-auto">
-      <div className="text-center mb-12">
-        <span className="text-sm font-bold text-ui-primary uppercase tracking-wider mb-2 block">
-          Get in Touch
-        </span>
-        <h1 className="text-4xl font-extrabold text-text-heading mb-4">
-          Engage with HTR Experts
-        </h1>
-        <p className="text-xl text-text-body">
-          Whether you need a strategic audit, a keynote speaker, or a custom
-          policy briefing, start the conversation here.
-        </p>
-      </div>
-
-      <div className="bg-surface border border-ui-border rounded-xl shadow-sm p-8 md:p-10">
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label className="block text-sm font-bold text-text-heading mb-2">
-                Name
-              </label>
+    <StaticPageLayout
+      title="Hire an Expert"
+      subtitle="Connect with our principal analysts and consultants."
+      content={
+        <div className="grid md:grid-cols-2 gap-12">
+          <div>
+            <h3 className="text-xl font-bold mb-4">Engage HTR</h3>
+            <p className="mb-6">
+              Whether you need a keynote speaker for your board retreat or a
+              full-time consultant for a 6-month transformation project, we have
+              the expertise.
+            </p>
+            <div className="bg-slate-50 p-6 rounded-lg">
+              <p className="font-bold text-slate-900">Direct Contact</p>
+              <p className="text-slate-600">advisory@htr.com</p>
+              <p className="text-slate-600">+1 (802) 555-0123</p>
+            </div>
+          </div>
+          <form className="flex flex-col gap-4">
+            <label className="flex flex-col gap-1">
+              <span className="text-sm font-bold text-gray-700">Name</span>
               <input
                 type="text"
-                className="w-full p-3 border border-ui-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ui-primary/50"
+                className="border p-2 rounded"
                 placeholder="Dr. Jane Doe"
-                value={formData.name}
-                onChange={(e) =>
-                  setFormData({ ...formData, name: e.target.value })
-                }
               />
-            </div>
-            <div>
-              <label className="block text-sm font-bold text-text-heading mb-2">
-                Work Email
-              </label>
+            </label>
+            <label className="flex flex-col gap-1">
+              <span className="text-sm font-bold text-gray-700">
+                Organization
+              </span>
               <input
-                type="email"
-                className="w-full p-3 border border-ui-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ui-primary/50"
-                placeholder="jane@hospital.org"
-                value={formData.email}
-                onChange={(e) =>
-                  setFormData({ ...formData, email: e.target.value })
-                }
+                type="text"
+                className="border p-2 rounded"
+                placeholder="Medical Center"
               />
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-sm font-bold text-text-heading mb-2">
-              Organization
             </label>
-            <input
-              type="text"
-              className="w-full p-3 border border-ui-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ui-primary/50"
-              placeholder="Health System / Tech Co / Payer"
-              value={formData.organization}
-              onChange={(e) =>
-                setFormData({ ...formData, organization: e.target.value })
-              }
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-bold text-text-heading mb-2">
-              Area of Interest
+            <label className="flex flex-col gap-1">
+              <span className="text-sm font-bold text-gray-700">
+                Inquiry Type
+              </span>
+              <select className="border p-2 rounded">
+                <option>Strategic Consulting</option>
+                <option>Speaking Engagement</option>
+                <option>Research Request</option>
+              </select>
             </label>
-            <select
-              className="w-full p-3 border border-ui-border rounded-lg bg-surface focus:outline-none focus:ring-2 focus:ring-ui-primary/50"
-              value={formData.interest}
-              onChange={(e) =>
-                setFormData({ ...formData, interest: e.target.value })
-              }
-            >
-              <option>Strategic Consulting</option>
-              <option>Custom Research Project</option>
-              <option>Expert Witness / Testimony</option>
-              <option>Speaking Engagement</option>
-              <option>Partnership Inquiry</option>
-            </select>
-          </div>
-
-          <div>
-            <label className="block text-sm font-bold text-text-heading mb-2">
-              Briefing
-            </label>
-            <textarea
-              rows={4}
-              className="w-full p-3 border border-ui-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ui-primary/50"
-              placeholder="Tell us about your challenge or timeline..."
-              value={formData.message}
-              onChange={(e) =>
-                setFormData({ ...formData, message: e.target.value })
-              }
-            />
-          </div>
-
-          <button
-            type="submit"
-            className="w-full py-4 bg-ui-primary text-ui-text-on-primary font-bold rounded-lg hover:opacity-90 transition shadow-md"
-          >
-            Submit Request
-          </button>
-        </form>
-      </div>
-    </div>
+            <button className="bg-indigo-600 text-white font-bold py-3 rounded mt-2 hover:bg-indigo-700">
+              Submit Inquiry
+            </button>
+          </form>
+        </div>
+      }
+    />
   );
-};
-
-export default ContactPage;
+}
