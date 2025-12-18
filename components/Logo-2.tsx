@@ -3,8 +3,25 @@ import React from 'react';
 const Logo = () => {
   return (
     <div className="flex items-center">
-      <div className="mr-4 flex h-24 w-20 flex-col items-center justify-center rounded-md bg-black p-2">
-        <span className="text-4xl font-bold text-white">HTR</span>
+      <div className="mr-4">
+        <svg width="80" height="96" viewBox="0 0 100 120">
+          <g transform="translate(0, 15)">
+            <polygon points="35,35 85,35 50,0 0,0" fill="#1d4ed8" />
+            <polygon points="85,35 85,85 50,50 50,0" fill="#047857" />
+            <polygon points="35,35 85,35 85,85 35,85" fill="#4338ca" />
+            <text
+              x="60"
+              y="60"
+              fontSize="20"
+              fontWeight="bold"
+              fill="white"
+              textAnchor="middle"
+              dominantBaseline="middle"
+            >
+              HTR
+            </text>
+          </g>
+        </svg>
       </div>
       <div className="flex flex-col justify-center">
         <div className="flex flex-col justify-center">

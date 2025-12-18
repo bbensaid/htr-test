@@ -1,65 +1,108 @@
 // components/Logo.tsx
 import React from "react";
 
-interface LogoProps {
-  theme?: "light" | "dark";
-}
+const Logo: React.FC = () => {
+  const cubeSize = 36; // size of the cube in pixels
+  const halfSize = cubeSize / 2;
 
-const Logo: React.FC<LogoProps> = ({ theme = "light" }) => {
-  // Theme-based styles
-  const textColor = theme === "dark" ? "white" : "black";
-  const boxBg = theme === "dark" ? "white" : "black";
-  const htrColor = theme === "dark" ? "black" : "white";
-  const taglineColor = theme === "dark" ? "gray-400" : "gray-500";
+  const cubeContainerStyle: React.CSSProperties = {
+    width: `${cubeSize}px`,
+    height: `${cubeSize}px`,
+    perspective: "1000px",
+  };
+
+  const cubeStyle: React.CSSProperties = {
+    width: "100%",
+    height: "100%",
+    position: "relative",
+    transformStyle: "preserve-3d",
+    transform: "rotateX(-25deg) rotateY(-35deg)",
+  };
+
+  const faceStyle: React.CSSProperties = {
+    position: "absolute",
+    width: `${cubeSize}px`,
+    height: `${cubeSize}px`,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  };
 
   return (
-    <div className="cursor-pointer select-none group">
-      <div className="flex items-center">
-        {/* HTR Box */}
-        <div
-          className="flex items-center justify-center w-12 h-12 mr-4 rounded-lg transition-all duration-300 ease-in-out group-hover:shadow-lg"
-          style={{
-            backgroundColor: boxBg,
-            filter: "drop-shadow(0 4px 6px rgba(0,0,0,0.1))",
-          }}
-        >
-          <span className="text-xl font-bold" style={{ color: htrColor }}>
-            HTR
-          </span>
+    <div className="inline-block">
+      <div className="flex items-center space-x-4">
+        {/* 3D Cube */}
+        <div style={cubeContainerStyle}>
+          <div style={cubeStyle}>
+            {/* Left Face (visibly) */}
+            <div
+              style={{
+                ...faceStyle,
+                background: "linear-gradient(135deg, #adadad 0%, #555555 100%)",
+                transform: `rotateY(0deg) translateZ(${halfSize}px)`,
+                boxShadow: "inset 0 0 10px #000000",
+                border: "1px solid white",
+              }}
+            >
+              <span
+                className="text-white text-lg font-bold"
+                style={{ textShadow: "0 0 5px rgba(255,255,255,0.5)" }}
+              >
+                T
+              </span>
+            </div>
+            {/* Top Face - with glossy effect */}
+            <div
+              style={{
+                ...faceStyle,
+                background: "linear-gradient(to bottom, #bbbbbb, #888888)",
+                transform: `rotateX(90deg) translateZ(${halfSize}px)`,
+                border: "1px solid white",
+              }}
+            >
+              <span
+                className="text-white text-lg font-bold"
+                style={{ textShadow: "0 0 5px rgba(255,255,255,0.5)" }}
+              >
+                H
+              </span>
+            </div>
+            {/* Right Face - with glossy effect */}
+            <div
+              style={{
+                ...faceStyle,
+                background: "linear-gradient(to top, #888888, #555555)",
+                transform: `rotateY(90deg) translateZ(${halfSize}px)`,
+                border: "1px solid white",
+              }}
+            >
+              <span
+                className="text-white text-lg font-bold"
+                style={{ textShadow: "0 0 5px rgba(255,255,255,0.5)" }}
+              >
+                R
+              </span>
+            </div>
+          </div>
         </div>
 
-        {/* Text Lines */}
-        <div className="flex flex-col justify-center">
-          <span
-            className="text-sm font-extrabold tracking-tight uppercase"
-            style={{ color: textColor }}
-          >
-            Health
-          </span>
-          <span
-            className="text-sm font-extrabold tracking-tight uppercase"
-            style={{ color: textColor }}
-          >
-            Transformation
-          </span>
-          <span
-            className="text-sm font-extrabold tracking-tight uppercase"
-            style={{ color: textColor }}
-          >
-            Review
-          </span>
-
-          {/* Line Separator */}
-          <div className="w-full h-px mt-0.5 bg-gray-200 dark:bg-gray-700"></div>
+        {/* Text */}
+        <div className="leading-tight">
+          <div className="text-sm font-extrabold text-black">HEALTH</div>
+          <div className="text-sm font-extrabold text-black">
+            TRANSFORMATION
+          </div>
+          <div className="text-sm font-extrabold text-black">REVIEW</div>
         </div>
       </div>
-      {/* Tagline */}
-      <p
-        className={`text-xs tracking-tight uppercase font-bold mt-0.5`}
-        style={{ color: taglineColor }}
-      >
-        Decoding the Value Transition
-      </p>
+
+      {/* Separator and Tagline */}
+      <div className="mt-0.2">
+        <div className="w-full border-t border-gray-400"></div>
+        <div className="mt-2 bg-black text-white text-[10px] font-bold py-1 px-2 rounded-md inline-block tracking-normal">
+          DECODING THE VALUE TRANSITION
+        </div>
+      </div>
     </div>
   );
 };
