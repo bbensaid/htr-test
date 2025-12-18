@@ -6,20 +6,16 @@ import Logo from "./Logo";
 
 const Footer: React.FC = () => {
   return (
-    <footer className="bg-surface-muted border-t border-ui-border pt-16 pb-8 mt-auto">
+    <footer className="bg-surface-muted border-t border-ui-border pt-2 pb-2 mt-auto">
       <div className="container mx-auto px-4 md:px-8">
         {/* Top Section: 4 Columns */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-2">
           {/* Column 1: Brand & Mission */}
           <div className="space-y-4">
             <Link href="/">
               <Logo />
             </Link>
-            <p className="text-sm text-text-body leading-relaxed">
-              The definitive source for intelligence at the convergence of
-              Health Policy, Economics, and Technology.
-            </p>
-            <div className="flex space-x-4 pt-2">
+            <div className="flex space-x-4 pt-8">
               <div className="w-8 h-8 bg-ui-bg-light rounded-full flex items-center justify-center text-ui-primary font-bold text-xs cursor-pointer hover:opacity-80">
                 LI
               </div>
@@ -62,14 +58,6 @@ const Footer: React.FC = () => {
                   Technology & AI
                 </Link>
               </li>
-              <li>
-                <Link
-                  href="/operations"
-                  className="hover:text-ui-primary transition"
-                >
-                  Clinical Operations
-                </Link>
-              </li>
             </ul>
           </div>
 
@@ -88,11 +76,6 @@ const Footer: React.FC = () => {
                 </Link>
               </li>
               <li>
-                <Link href="/faq" className="hover:text-ui-primary transition">
-                  FAQ
-                </Link>
-              </li>
-              <li>
                 <Link
                   href="/advisory/contact"
                   className="hover:text-ui-primary transition"
@@ -106,14 +89,6 @@ const Footer: React.FC = () => {
                   className="hover:text-ui-primary transition"
                 >
                   Annual Reports
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/education"
-                  className="hover:text-ui-primary transition"
-                >
-                  HTR Academy
                 </Link>
               </li>
             </ul>
@@ -141,7 +116,7 @@ const Footer: React.FC = () => {
         </div>
 
         {/* Bottom Section */}
-        <div className="border-t border-ui-border pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-text-body">
+        <div className="border-t border-ui-border pt-2 flex flex-col md:flex-row justify-between items-center gap-2 text-xs text-text-body">
           <p>
             &copy; {new Date().getFullYear()} Health Transformation Review. All
             rights reserved.
